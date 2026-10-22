@@ -1,0 +1,12 @@
+{
+  "name": "word42-cet4-foundation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "42-day CET-4 vocabulary sprint for Huawei HarmonyOS 7 (ArkTS/ArkWeb) and the web",
+  "scripts": {
+    "start": "node scripts/serve.cjs",
+    "test": "node --test",
+    "package:harmony": "node harmonyos/scripts/package-web.mjs"
+  },
+  "license": "MIT"
+}

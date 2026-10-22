@@ -1,0 +1,926 @@
+[
+  {
+    "day": 1,
+    "title": "Small Steps, Real Progress",
+    "topic": "用小步学习建立信心",
+    "type": "观点说明",
+    "prompt": "Write an essay on the value of small, regular steps in learning. Give an example from student life. Write 120–180 words.",
+    "essay": [
+      "When a learning goal seems too difficult, small steps can make it possible. A student who wants to improve English does not need to master everything in one week. A clear task for today is often more useful than an impressive plan that never begins.",
+      "For example, we can learn a small group of useful words and review them the next day. We can also read one short paragraph and explain its main idea in simple language. These tasks give us a chance to notice mistakes and correct them. As the work becomes familiar, we can gradually increase the amount.",
+      "Small steps do not mean low expectations. They help us turn a distant goal into actions we can actually complete. By checking our progress honestly and continuing after a difficult day, we can build both knowledge and confidence."
+    ],
+    "translation": [
+      "当学习目标看起来太难时，小步行动能让它变得可实现。想提高英语的学生不必在一周内掌握所有内容。一个明确的今日任务，往往比从未开始的宏大计划更有用。",
+      "例如，我们可以学习一小组实用词汇，并在第二天复习。也可以读一个短段落，用简单语言解释大意。这些任务让我们发现并改正错误。随着练习逐渐熟悉，可以慢慢增加任务量。",
+      "小步行动不代表降低期望。它帮助我们把遥远目标变成真正能完成的行动。诚实检查进步，并在困难的一天后继续，我们就能积累知识和信心。"
+    ],
+    "outline": [
+      "提出小步行动的价值",
+      "举背词和短段阅读的例子",
+      "说明坚持与诚实检查的作用"
+    ],
+    "phrases": [
+      {
+        "en": "make it possible",
+        "zh": "使它成为可能"
+      },
+      {
+        "en": "notice mistakes",
+        "zh": "发现错误"
+      },
+      {
+        "en": "build confidence",
+        "zh": "建立信心"
+      }
+    ],
+    "task": "先圈出 goal、task、progress。分析 We can build both knowledge and confidence：We 是主语，can build 是谓语，knowledge and confidence 是宾语。再用中文说出第二段的两个例子。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 138
+  },
+  {
+    "day": 2,
+    "title": "Making Room for Exercise",
+    "topic": "校园规律运动",
+    "type": "建议说明",
+    "prompt": "Write an essay about how college students can make exercise part of daily life. Write 120–180 words.",
+    "essay": [
+      "College students often spend many hours sitting in classrooms or working at a desk. Although study is important, movement also deserves a place in our daily schedule. We do not have to become excellent athletes to enjoy an active life.",
+      "A practical beginning is to choose an activity that fits our interests and situation. Walking with a classmate after lunch may be easier to maintain than an ambitious training plan. Students who enjoy games can join a friendly badminton group. The key is to start with a manageable amount and avoid comparing ourselves with more experienced players.",
+      "Exercise should support our lives rather than become another source of pressure. A regular time, a suitable place and an encouraging friend can help us continue. When movement becomes a normal part of the day, we are more likely to keep the habit."
+    ],
+    "translation": [
+      "大学生经常长时间坐在教室或书桌前。学习固然重要，运动也应该进入日常安排。我们不必成为优秀运动员才能享受活跃的生活。",
+      "实际的起点是选择符合兴趣和自身情况的活动。午饭后与同学散步，可能比宏大的训练计划更容易坚持。喜欢球类的学生可以加入友好的羽毛球小组。关键是从能承受的量开始，不与更有经验的人攀比。",
+      "运动应当支持生活，而不是增加压力。固定时间、合适地点和鼓励自己的朋友，都能帮助我们坚持。当运动成为一天中正常的一部分，习惯就更容易保持。"
+    ],
+    "outline": [
+      "指出久坐场景",
+      "给出可执行的运动选择",
+      "强调适度和持续"
+    ],
+    "phrases": [
+      {
+        "en": "fit our interests",
+        "zh": "符合我们的兴趣"
+      },
+      {
+        "en": "a source of pressure",
+        "zh": "压力的来源"
+      },
+      {
+        "en": "keep the habit",
+        "zh": "保持习惯"
+      }
+    ],
+    "task": "找出第一段的 students 和 movement。分析 Students can join a friendly badminton group 的主语、谓语、宾语。再找出文中两个运动例子，不必背整段。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 140
+  },
+  {
+    "day": 3,
+    "title": "A Better Evening Routine",
+    "topic": "作息与学习安排",
+    "type": "问题与建议",
+    "prompt": "Write an essay on arranging evening study without giving up a regular rest schedule. Write 120–180 words.",
+    "essay": [
+      "Before an examination, some students try to gain extra study time by staying up very late. However, a longer evening does not always produce better work. When we are tired, even a familiar exercise may require repeated attempts.",
+      "A better approach is to plan the evening before it becomes busy. We can choose two important tasks, turn off unnecessary notifications and set a reasonable finishing time. Difficult work can come first, while a short review can come later. If a task remains unfinished, writing down the next step helps us return to it tomorrow instead of worrying without a plan.",
+      "A regular routine is not a sign of laziness. It is a way to use our available time with greater care. Students should judge a study session by what they understand and can recall, rather than by how late the light stays on."
+    ],
+    "translation": [
+      "考试前，有些学生通过熬夜争取更多学习时间。然而，夜晚拉得更长并不总能带来更好的成果。疲倦时，即使熟悉的练习也可能要反复尝试。",
+      "更好的办法是在忙碌之前安排夜晚。选两个重要任务，关闭不必要的通知，设定合理结束时间。先做难题，稍后进行短复习。若任务未完成，记下下一步，明天就能接着做，而不是毫无计划地焦虑。",
+      "规律作息不是懒惰，而是更认真地使用现有时间。学生应根据自己理解并能回忆什么来评价学习，而不是根据灯亮到多晚。"
+    ],
+    "outline": [
+      "提出熬夜学习的问题",
+      "给出晚间安排步骤",
+      "用理解与回忆评价学习"
+    ],
+    "phrases": [
+      {
+        "en": "stay up very late",
+        "zh": "熬夜到很晚"
+      },
+      {
+        "en": "set a reasonable finishing time",
+        "zh": "设定合理的结束时间"
+      },
+      {
+        "en": "return to it tomorrow",
+        "zh": "明天继续处理它"
+      }
+    ],
+    "task": "先识别 tired、review、recall 的意思。分析 We can choose two important tasks 的主谓宾。找出 while 连接的两个安排，并用中文解释。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 143
+  },
+  {
+    "day": 4,
+    "title": "Volunteering with Care",
+    "topic": "校园志愿服务",
+    "type": "观点说明",
+    "prompt": "Write an essay about what makes student volunteering useful. Give a concrete example. Write 120–180 words.",
+    "essay": [
+      "Volunteering gives college students a chance to serve others and understand life beyond the classroom. Yet a useful volunteer activity requires more than enthusiasm. Students need to learn what people actually need and whether they can provide reliable help.",
+      "For example, a reading programme for children should begin with a discussion with the local organiser. Volunteers can prepare suitable stories, arrive on time and listen patiently. Taking a photograph at the event is much less important than making the children feel welcome. If students cannot attend regularly, they should explain this early so that another person can take their place.",
+      "Good volunteering depends on respect and responsibility. By keeping small promises and reflecting on each activity, students can become more thoughtful helpers. The experience is valuable when both the community and the volunteers gain something meaningful from it."
+    ],
+    "translation": [
+      "志愿服务让大学生有机会帮助他人，理解课堂以外的生活。但有用的志愿活动需要的不只是热情。学生必须了解人们真正需要什么，以及自己能否可靠地提供帮助。",
+      "例如，儿童阅读活动应先与当地组织者沟通。志愿者可以准备合适故事、准时到场并耐心倾听。拍照远不如让孩子感到受欢迎重要。若不能定期参加，应尽早说明，让其他人接替。",
+      "好的志愿服务依靠尊重与责任。通过兑现小承诺、反思每次活动，学生能成为更体贴的帮助者。当社区与志愿者都有实质收获时，这段经历才有价值。"
+    ],
+    "outline": [
+      "服务需要了解真实需求",
+      "用儿童阅读活动举例",
+      "总结尊重与责任"
+    ],
+    "phrases": [
+      {
+        "en": "provide reliable help",
+        "zh": "提供可靠的帮助"
+      },
+      {
+        "en": "arrive on time",
+        "zh": "准时到达"
+      },
+      {
+        "en": "keep small promises",
+        "zh": "兑现小承诺"
+      }
+    ],
+    "task": "找出 volunteer、respect、responsibility。分析 Volunteers can prepare suitable stories 的主谓宾。再从第二段选一个你能做到的行为，用中文说明。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 138
+  },
+  {
+    "day": 5,
+    "title": "Finding a Way into Reading",
+    "topic": "建立阅读习惯",
+    "type": "建议说明",
+    "prompt": "Write an essay on how students can develop a reading habit. Write 120–180 words.",
+    "essay": [
+      "Many students hope to read more, but they give up after choosing a book that is too difficult or too long. A reading habit can begin with something smaller. The first goal is to create regular contact with a text that interests us.",
+      "We can start with a short story, an accessible article or a chapter about a familiar subject. A quiet ten minutes may be enough for one useful session. Instead of checking every unfamiliar word immediately, we can first ask what the paragraph is mainly saying. Afterwards, we can look up a few words that matter to that meaning and write a brief response.",
+      "Reading becomes more rewarding when we connect ideas with our own questions. Sharing one interesting point with a friend can also encourage us to continue. Over time, small sessions can prepare us for longer and more demanding books."
+    ],
+    "translation": [
+      "许多学生希望多读书，却在选了一本太难或太长的书后放弃。阅读习惯可以从更小的内容开始。第一个目标是定期接触自己感兴趣的文字。",
+      "可以从短故事、易懂文章或熟悉主题的一章开始。安静读十分钟，也能构成一次有用的练习。不要马上查每个生词，先问这一段主要说什么。然后查几个影响理解的词，写一点简短回应。",
+      "当我们把观点与自己的问题联系起来时，阅读更有收获。与朋友分享一个有趣的观点也能鼓励我们继续。久而久之，小段练习能为更长、更难的书做好准备。"
+    ],
+    "outline": [
+      "从过难选书的问题切入",
+      "介绍短时阅读与选择性查词",
+      "说明思考和分享的价值"
+    ],
+    "phrases": [
+      {
+        "en": "a familiar subject",
+        "zh": "熟悉的主题"
+      },
+      {
+        "en": "look up a few words",
+        "zh": "查几个单词"
+      },
+      {
+        "en": "over time",
+        "zh": "随着时间推移"
+      }
+    ],
+    "task": "识别 habit、paragraph、meaning。分析 We can look up a few words 中的主语、谓语、宾语。用一句中文概括本文最实用的建议。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 144
+  },
+  {
+    "day": 6,
+    "title": "Using Online Courses Well",
+    "topic": "线上学习",
+    "type": "利弊与建议",
+    "prompt": "Write an essay about how students can benefit from online courses. Write 120–180 words.",
+    "essay": [
+      "Online courses allow students to explore subjects beyond their classroom timetable. A lecture can be paused, repeated or watched at a suitable time. However, easy access to a course does not mean that useful learning will happen automatically.",
+      "To use an online course well, students need a clear purpose. Someone who wants to improve presentation skills should choose a course with practical speaking tasks, not simply collect long lists of videos. After each lesson, it helps to close the screen and explain the main idea without looking at the notes. Completing a small project can then show which parts are understood and which require more work.",
+      "Online learning offers flexibility, but learners must supply attention and action. A modest course that we complete carefully may be more valuable than several impressive courses that we abandon. The aim is to use knowledge, not merely to finish watching."
+    ],
+    "translation": [
+      "网课让学生探索课表之外的主题。课程可以暂停、重看，或在合适时间观看。但容易获取课程，不代表有效学习会自动发生。",
+      "要学好网课，需要明确目的。想提高演讲能力的人应选择有实际口语任务的课程，而不只是收藏长长的视频列表。每节课后关闭屏幕，不看笔记解释要点。完成一个小项目，则能显示哪些部分理解了、哪些还需努力。",
+      "线上学习提供灵活性，但注意力与行动需要学习者自己投入。认真完成一门普通课程，可能比放弃几门看起来厉害的课程更有价值。目标是使用知识，而不只是看完视频。"
+    ],
+    "outline": [
+      "说明线上课程的便利",
+      "提出目标、自测与项目实践",
+      "强调完成与运用"
+    ],
+    "phrases": [
+      {
+        "en": "a clear purpose",
+        "zh": "明确的目的"
+      },
+      {
+        "en": "without looking at the notes",
+        "zh": "不看笔记"
+      },
+      {
+        "en": "put knowledge into practice",
+        "zh": "把知识用于实践"
+      }
+    ],
+    "task": "仿写 Someone who wants to ... should ...：写一句关于提高听力的建议。再把 A lecture can be paused 改成以 A video 开头的句子，核对 can be 后的动词形式。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 146
+  },
+  {
+    "day": 7,
+    "title": "Less Plastic on Campus",
+    "topic": "减少塑料使用",
+    "type": "问题与措施",
+    "prompt": "Write an essay proposing practical ways to reduce unnecessary plastic use on campus. Write 120–180 words.",
+    "essay": [
+      "Plastic products are convenient, but some are used for only a few minutes before being thrown away. On a busy campus, students can see this pattern in takeaway meals and bottled drinks. Reducing unnecessary use requires changes that fit everyday life.",
+      "Students can carry a reusable bottle when safe drinking water is available and decline extra bags when they do not need them. Shops can also make cutlery optional instead of adding it automatically to every order. Clear instructions near collection points would help people separate waste correctly. These steps are easier to follow when the university provides suitable facilities and explains how the system works.",
+      "No single student can solve the entire problem. However, shared action can make waste reduction part of campus culture. The most useful approach is to remove avoidable waste while keeping essential services convenient and accessible."
+    ],
+    "translation": [
+      "塑料制品很方便，但有些只用几分钟就被丢弃。在繁忙校园里，外卖和瓶装饮料常呈现这种模式。减少不必要使用，需要适合日常生活的改变。",
+      "有安全饮水设施时，学生可以带可重复使用的水瓶，不需要时拒绝额外袋子。商店可以让顾客选择餐具，而非每单自动添加。收集点附近的清楚说明，也有助于正确分类。学校提供合适设施并解释运行方式后，这些行动更容易执行。",
+      "一个学生解决不了整个问题。但共同行动能让减废成为校园文化。有效的办法是去掉可以避免的浪费，同时保持必要服务的便利与可及。"
+    ],
+    "outline": [
+      "描述一次性塑料场景",
+      "给出个人和学校的措施",
+      "强调合作与便利"
+    ],
+    "phrases": [
+      {
+        "en": "reduce unnecessary use",
+        "zh": "减少不必要的使用"
+      },
+      {
+        "en": "instead of",
+        "zh": "而不是"
+      },
+      {
+        "en": "shared action",
+        "zh": "共同的行动"
+      }
+    ],
+    "task": "仿写 Students can ... when ...，用它写一个节约用水的具体做法。再用 instead of 写一句自己的环保选择，尽量用熟悉的短词。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 141
+  },
+  {
+    "day": 8,
+    "title": "Preparing for Work at University",
+    "topic": "毕业所需的能力",
+    "type": "观点说明",
+    "prompt": "Write an essay about useful abilities that students can develop before graduation. Write 120–180 words.",
+    "essay": [
+      "A university education should help students understand their subjects and prepare for responsibilities beyond campus. Professional knowledge is essential, but employers may also need people who can communicate clearly, organise tasks and learn unfamiliar skills. These abilities can be practised during ordinary student life.",
+      "For instance, a group assignment offers a chance to set deadlines and explain ideas to others. A student who records decisions and follows up on unfinished work is learning responsibility. Presenting the results can also reveal whether the group has understood its topic. Part of the preparation is asking for feedback and making improvements rather than expecting the first attempt to be perfect.",
+      "Students do not need to turn every activity into a job application. They can build useful habits by taking existing tasks seriously. Knowledge, cooperation and a willingness to keep learning provide a practical foundation for the transition to work."
+    ],
+    "translation": [
+      "大学教育应帮助学生理解专业，并为校园之外的责任做准备。专业知识很重要，但用人单位也可能需要能清楚交流、安排任务和学习新技能的人。这些能力可以在日常校园生活中练习。",
+      "例如，小组作业提供了设定期限和解释观点的机会。记录决定并跟进未完成工作，就是在学习负责。展示成果也能检验小组是否理解主题。准备过程还包括主动寻求反馈并改进，而非期待第一次就完美。",
+      "学生不必把每次活动都变成求职申请。认真对待已有任务，就能培养有用习惯。知识、合作和持续学习意愿，为进入职场提供实际基础。"
+    ],
+    "outline": [
+      "列出专业外的实用能力",
+      "用小组作业说明练习方式",
+      "强调日常积累"
+    ],
+    "phrases": [
+      {
+        "en": "set deadlines",
+        "zh": "设定截止时间"
+      },
+      {
+        "en": "ask for feedback",
+        "zh": "寻求反馈"
+      },
+      {
+        "en": "a practical foundation",
+        "zh": "实际的基础"
+      }
+    ],
+    "task": "仿写 A group assignment offers a chance to ...，换成社团活动。再用 Students do not need to ... 写一个你认为不必做的无效准备。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 146
+  },
+  {
+    "day": 9,
+    "title": "A Study Group That Works",
+    "topic": "有效的小组学习",
+    "type": "建议说明",
+    "prompt": "Write an essay explaining how to organise an effective study group. Write 120–180 words.",
+    "essay": [
+      "Studying with classmates can make a difficult subject easier to approach. Different students notice different details, and explaining an idea can reveal gaps in our own understanding. However, simply sitting together does not make a group productive.",
+      "Before a meeting, each member should prepare a few questions and attempt the assigned work independently. During the meeting, the group can compare answers and discuss the reasons behind them. Taking turns to explain a problem prevents one confident person from doing all the thinking. When nobody understands a point, members should record it and ask a teacher instead of agreeing on an unsupported guess.",
+      "An effective study group needs a clear purpose and room for honest mistakes. A short meeting with active participation can achieve more than a long conversation without direction. Each student should leave knowing what to review next on their own."
+    ],
+    "translation": [
+      "与同学学习能让难学的科目更容易入手。不同学生注意到不同细节，解释一个观点也能暴露自己的理解缺口。但坐在一起并不意味着学习高效。",
+      "见面前，每人应准备几个问题并独立尝试作业。讨论时可以比较答案及其理由。轮流解释问题，可以避免只有一个自信的人思考。若没人理解某一点，应记下来问老师，而不是共同接受没有依据的猜测。",
+      "有效学习小组需要明确目的，也要允许诚实犯错。人人参与的短讨论可能胜过没有方向的长谈。离开时，每个学生都应知道接下来独立复习什么。"
+    ],
+    "outline": [
+      "说明同伴学习的优势",
+      "列出准备和讨论规则",
+      "强调个人后续复习"
+    ],
+    "phrases": [
+      {
+        "en": "take turns to explain",
+        "zh": "轮流解释"
+      },
+      {
+        "en": "active participation",
+        "zh": "积极参与"
+      },
+      {
+        "en": "on their own",
+        "zh": "独立地"
+      }
+    ],
+    "task": "仿写 Before a meeting, each member should ...，为英语小组写一条准备规则。再用 instead of 描述讨论中应避免的一种行为。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 142
+  },
+  {
+    "day": 10,
+    "title": "Choosing a Campus Club",
+    "topic": "选择校园社团",
+    "type": "建议说明",
+    "prompt": "Write an essay giving advice to students who are choosing a campus club. Write 120–180 words.",
+    "essay": [
+      "Campus clubs offer opportunities to meet people and explore interests beyond academic courses. At the beginning of a term, the number of choices can be exciting. Yet joining many clubs at once may leave a student with little time to enjoy any of them.",
+      "A sensible choice starts with two questions: what would I like to learn, and how much time can I offer? A student interested in photography might attend a trial activity before becoming a regular member. Asking about meeting times, costs and responsibilities can prevent misunderstandings later. It is also helpful to notice whether new members are treated with patience and respect.",
+      "The best club is not necessarily the most famous one. It is a place where we can contribute, practise and feel included. Choosing carefully allows us to build real connections while keeping enough time for study and rest."
+    ],
+    "translation": [
+      "校园社团提供结识朋友、探索课程之外兴趣的机会。学期初，丰富选择令人兴奋。但同时加入很多社团，可能让人无暇享受其中任何一个。",
+      "合理选择先问两个问题：想学什么，能投入多少时间？喜欢摄影的学生可以先试参加一次。询问活动时间、费用与责任，可以避免日后误解。也应观察新成员是否受到耐心、尊重的对待。",
+      "最适合的社团未必最有名，而是能让我们贡献、练习并获得归属感的地方。认真选择有助于建立真实联系，同时保留足够的学习与休息时间。"
+    ],
+    "outline": [
+      "机会多但时间有限",
+      "提出选择标准与试参加建议",
+      "总结适合比名气更重要"
+    ],
+    "phrases": [
+      {
+        "en": "a trial activity",
+        "zh": "体验活动"
+      },
+      {
+        "en": "prevent misunderstandings",
+        "zh": "避免误解"
+      },
+      {
+        "en": "feel included",
+        "zh": "感到被接纳"
+      }
+    ],
+    "task": "仿写 A student interested in ... might ...，替换成你的兴趣。再写一句 I can offer ... hours a week，注意量力而行。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 143
+  },
+  {
+    "day": 11,
+    "title": "Learning with AI Responsibly",
+    "topic": "负责任地使用人工智能学习",
+    "type": "利弊与建议",
+    "prompt": "Write an essay about responsible use of AI tools in college learning. Write 120–180 words.",
+    "essay": [
+      "AI tools can offer explanations, suggest examples and help students begin an unfamiliar task. Their convenience makes them attractive learning partners. However, an answer that sounds clear may still contain mistakes, and accepting it without thought can hide what we have not understood.",
+      "Students can use these tools more carefully by attempting a problem first and then asking for an explanation of a specific difficulty. They should compare important claims with course materials or reliable sources. In writing tasks, an AI suggestion can become a starting point for revision, but students must check its meaning and follow their course rules about permitted assistance. Personal information should not be shared unnecessarily.",
+      "The purpose of a learning tool is to strengthen our ability to think. When we question suggestions, test our understanding and remain responsible for the final work, technology can support learning without taking over the whole process."
+    ],
+    "translation": [
+      "人工智能工具能解释问题、提供例子，帮助学生着手陌生任务。它们的便利使其成为有吸引力的学习伙伴。但听起来清楚的答案仍可能出错，不思考就接受也会掩盖理解缺口。",
+      "可以先自己尝试，再针对具体困难请求解释。重要说法应与教材或可靠来源比较。写作建议可以成为修改起点，但学生必须检查含义，并遵守课程对辅助工具的规定。不必要时不要分享个人信息。",
+      "学习工具的目的在于增强思考能力。当我们质疑建议、测试理解，并对最终作品负责时，技术就能支持学习，而不接管整个过程。"
+    ],
+    "outline": [
+      "指出工具用途与风险",
+      "列出核验和合规使用方法",
+      "强调学生保持思考责任"
+    ],
+    "phrases": [
+      {
+        "en": "reliable sources",
+        "zh": "可靠来源"
+      },
+      {
+        "en": "a starting point for revision",
+        "zh": "修改的起点"
+      },
+      {
+        "en": "remain responsible for",
+        "zh": "仍然对……负责"
+      }
+    ],
+    "task": "仿写 An answer that sounds clear may still ...，描述另一种看似可信的内容。再用 Students should compare ... with ... 写一句核验建议。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 147
+  },
+  {
+    "day": 12,
+    "title": "Reducing Food Waste",
+    "topic": "减少食物浪费",
+    "type": "问题与措施",
+    "prompt": "Write an essay suggesting ways to reduce food waste in a university dining hall. Write 120–180 words.",
+    "essay": [
+      "Food waste is easy to notice when plates return to a dining hall with large amounts of food left on them. It is tempting to blame individual students, but useful solutions should also consider portion sizes, food quality and the way meals are sold.",
+      "Students can begin by ordering an amount they expect to finish and asking for more only when necessary. Dining halls can offer smaller portions at fair prices so that this choice is practical. They can also collect feedback on unpopular dishes and adjust preparation according to demand. Clear information about ingredients helps students avoid buying meals they cannot or do not wish to eat.",
+      "Reducing waste requires cooperation rather than embarrassment. When students and dining hall staff share information and make small changes, saving food becomes easier. Respect for food is most convincing when it is supported by sensible everyday choices."
+    ],
+    "translation": [
+      "餐盘里剩下很多饭菜时，食物浪费很容易被看见。人们容易只责怪学生个人，但有效解决办法也应考虑分量、质量和售卖方式。",
+      "学生可以先点预计能吃完的量，需要时再加。食堂可以提供价格合理的小份，让选择切实可行；也可收集对不受欢迎菜品的反馈，按需求调整备餐。清楚标明配料，有助于学生避免购买不能吃或不想吃的饭菜。",
+      "减少浪费需要合作，而非让人难堪。学生和食堂工作人员分享信息、做出小改变，就能更容易节约食物。尊重食物最有说服力的表达，是合理的日常选择。"
+    ],
+    "outline": [
+      "提出问题及多方面原因",
+      "列出学生和食堂的措施",
+      "总结合作"
+    ],
+    "phrases": [
+      {
+        "en": "smaller portions",
+        "zh": "较小的份量"
+      },
+      {
+        "en": "according to demand",
+        "zh": "按照需求"
+      },
+      {
+        "en": "collect feedback",
+        "zh": "收集反馈"
+      }
+    ],
+    "task": "仿写 Dining halls can offer ... so that ...，给食堂写一条改进建议。再用 only when necessary 写一句节约资源的做法。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 145
+  },
+  {
+    "day": 13,
+    "title": "Learning after a Setback",
+    "topic": "失败后的改进",
+    "type": "观点与步骤",
+    "prompt": "Write an essay on how students can respond constructively to a disappointing result. Write 120–180 words.",
+    "essay": [
+      "A disappointing result can make a student doubt months of effort. Feeling upset is understandable, but one result cannot explain every part of our ability. What matters next is whether we can turn the experience into information for improvement.",
+      "After an unsuccessful test, we can separate errors into different groups. Some may come from missing knowledge, while others result from misunderstanding a question or using time poorly. Each group needs a different response. Reviewing one weak topic is more useful than repeating every exercise without a purpose. A teacher or classmate may also help us notice a pattern that we have missed.",
+      "Progress does not require us to enjoy failure or pretend that it is harmless. It requires an honest review and a realistic next step. By changing one part of our approach and checking the result, we can begin to move forward."
+    ],
+    "translation": [
+      "不理想的结果可能让学生怀疑数月努力。难过可以理解，但一次结果不能说明能力的所有方面。接下来关键的是，能否把经历变成改进所需的信息。",
+      "考试失利后，可以分类错误：有些来自知识不足，有些来自误解题意或时间安排不当。每类需要不同应对。复习一个薄弱主题，比漫无目的重做全部练习更有用。老师或同学也可能帮助发现自己忽略的规律。",
+      "进步不要求我们喜欢失败，也不要求假装失败没有影响；它需要诚实复盘和实际的下一步。改变一个做法并检查结果，就能重新向前。"
+    ],
+    "outline": [
+      "承认受挫情绪",
+      "分析错误并匹配措施",
+      "提出实际下一步"
+    ],
+    "phrases": [
+      {
+        "en": "a disappointing result",
+        "zh": "令人失望的结果"
+      },
+      {
+        "en": "separate errors into groups",
+        "zh": "把错误分类"
+      },
+      {
+        "en": "move forward",
+        "zh": "向前推进"
+      }
+    ],
+    "task": "仿写 Some may come from ..., while others result from ...，描述自己的两类英语错误。再写一个以 I will 开头、明天可以完成的改进动作。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 143
+  },
+  {
+    "day": 14,
+    "title": "Listening across Differences",
+    "topic": "与不同背景的人交流",
+    "type": "观点说明",
+    "prompt": "Write an essay about communicating with people from different backgrounds. Write 120–180 words.",
+    "essay": [
+      "University brings together people with different hometowns, experiences and ways of speaking. These differences can make campus life interesting, but they can also lead to misunderstandings. Good communication begins when we stop assuming that our own habits are shared by everyone.",
+      "When a classmate expresses an unfamiliar opinion, we can ask a respectful question before making a judgment. Listening carefully may reveal a personal experience behind the view. We can explain our own position in clear language without claiming to represent every person from our community. In group activities, checking that everyone understands the arrangement is often more helpful than expecting silent agreement.",
+      "Understanding does not require complete agreement. It requires patience and a willingness to treat another person as an individual. Through ordinary conversations, students can learn to cooperate across differences and build relationships based on curiosity rather than quick assumptions."
+    ],
+    "translation": [
+      "大学把来自不同家乡、拥有不同经历和表达方式的人聚在一起。这些差异让校园有趣，也可能造成误解。良好交流从不再假设所有人都拥有自己的习惯开始。",
+      "同学表达陌生观点时，可以先尊重地提问，再作判断。认真听，也许会发现观点背后的个人经历。解释自己的立场时不必声称代表整个群体。在集体活动中，确认人人理解安排，往往比期待默默同意更有帮助。",
+      "理解不要求完全赞同，而需要耐心，以及把对方当作独立个体的意愿。普通对话能让学生学会跨越差异合作，建立源于好奇而非仓促假设的关系。"
+    ],
+    "outline": [
+      "介绍校园中的差异",
+      "建议提问、倾听与确认",
+      "区分理解和赞同"
+    ],
+    "phrases": [
+      {
+        "en": "ask a respectful question",
+        "zh": "尊重地提问"
+      },
+      {
+        "en": "make a judgment",
+        "zh": "作出判断"
+      },
+      {
+        "en": "cooperate across differences",
+        "zh": "跨越差异合作"
+      }
+    ],
+    "task": "仿写 When a classmate ..., we can ...，写一句沟通建议。再仿写 Understanding does not require ...，说明你对理解他人的看法。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 142
+  },
+  {
+    "day": 15,
+    "title": "Green Spaces for Everyone",
+    "topic": "校园绿色空间",
+    "type": "观点与建议",
+    "prompt": "Write an essay on making campus green spaces more useful and welcoming. Write 120–180 words.",
+    "essay": [
+      "A campus green space is more than a pleasant background for photographs. It can give students a place to pause between classes, meet friends or read outdoors. Its value depends not only on its appearance, but also on whether people can actually use it.",
+      "A well designed space should offer clear paths, suitable seating and areas of shade. Students with different mobility needs should be able to reach it without unnecessary difficulty. The university can ask users where benches are needed and which paths become inconvenient after rain. Planting choices should also consider local conditions and the work required to maintain them, rather than focusing only on a brief display of flowers.",
+      "Students can contribute by keeping shared areas clean and respecting quiet activities. With practical design and considerate use, a small green corner can become a welcoming part of daily campus life."
+    ],
+    "translation": [
+      "校园绿地不只是拍照背景。它能让学生课间休息、见朋友或户外阅读。其价值既在于外观，也在于人们能否真正使用。",
+      "设计良好的空间应有清晰道路、合适座椅和阴凉处。不同出行需求的学生都应方便到达。学校可以询问哪里需要长椅、哪些路雨后不方便。植物选择也应考虑当地条件和养护劳动，而非只关注短暂花展。",
+      "学生可以保持公共区域清洁，并尊重安静活动。实际的设计与体贴的使用，能让一小块绿地成为日常校园生活中受欢迎的地方。"
+    ],
+    "outline": [
+      "提出绿地的日常用途",
+      "说明可达性与养护设计",
+      "提出共同维护"
+    ],
+    "phrases": [
+      {
+        "en": "areas of shade",
+        "zh": "阴凉区域"
+      },
+      {
+        "en": "local conditions",
+        "zh": "当地条件"
+      },
+      {
+        "en": "considerate use",
+        "zh": "体贴他人的使用方式"
+      }
+    ],
+    "task": "仿写 Its value depends not only on ..., but also on ...，谈一个你熟悉的校园设施。再写一句 Students can contribute by ...，注意 by 后用动词 ing 形式。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 143
+  },
+  {
+    "day": 16,
+    "title": "Thinking Carefully about Part-time Work",
+    "topic": "大学兼职的利弊",
+    "type": "平衡讨论",
+    "prompt": "Write an essay discussing what students should consider before taking a part-time job. Write 120–180 words.",
+    "essay": [
+      "A part-time job can offer students income and a closer view of working life. It may also help them practise communication and understand the importance of keeping commitments. However, a job is useful only when its demands fit the student's wider responsibilities.",
+      "Before accepting an offer, students should check the duties, payment arrangements and expected working hours. They also need to consider travel time and busy periods in their courses. A few manageable shifts may provide experience, while an unpredictable schedule can interfere with classes and rest. If an offer is unclear, students should seek advice from a trusted university service rather than rush into a decision.",
+      "Working during university is a personal choice, not a competition. Some students benefit from it, while others need to focus on study or other responsibilities. A careful decision should protect learning and leave room for a balanced daily life."
+    ],
+    "translation": [
+      "兼职能提供收入，帮助学生接触工作生活，也能练习交流、理解守约的重要性。但只有工作要求与其他责任匹配时，兼职才有价值。",
+      "接受前应核实职责、薪酬安排和工作时间，还要考虑通勤及课程繁忙期。适量班次能带来经验，难预测的排班却可能影响上课和休息。条件不清楚时，应向可信的学校服务部门咨询，不急于决定。",
+      "大学期间工作是个人选择，不是竞争。有些人从中受益，另一些人需要专注学习或其他责任。谨慎决定应保护学习，并为平衡生活留出空间。"
+    ],
+    "outline": [
+      "说明兼职的可能收益",
+      "检查时间与工作条件",
+      "根据个人情况作选择"
+    ],
+    "phrases": [
+      {
+        "en": "keep commitments",
+        "zh": "履行承诺"
+      },
+      {
+        "en": "interfere with classes",
+        "zh": "干扰上课"
+      },
+      {
+        "en": "seek advice",
+        "zh": "寻求建议"
+      }
+    ],
+    "task": "段落补全：先写 Before accepting an offer, students should ...，补两句具体核查事项；再以 If an offer is unclear, ... 结尾。完成后对照第二段，检查每句是否有主语和谓语。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 146
+  },
+  {
+    "day": 17,
+    "title": "A Thoughtful Museum Visit",
+    "topic": "有思考的博物馆参观",
+    "type": "建议说明",
+    "prompt": "Write an essay on how students can make a museum visit meaningful. Write 120–180 words.",
+    "essay": [
+      "A museum visit can connect classroom knowledge with objects that people once made, used or valued. Yet walking quickly through every room may leave only a vague impression. A meaningful visit does not require us to see everything in a single afternoon.",
+      "Before going, students can choose a question that interests them, such as how ordinary families lived in a certain period. During the visit, they can examine a few relevant objects closely and read the explanations with care. Noting a detail or sketching a simple shape may help them look more attentively. If an explanation raises a question, they can record it for further reading afterwards.",
+      "The purpose is to build a conversation between the exhibition and our own curiosity. By choosing a focus and reflecting on what we discover, we can leave with a clearer understanding instead of only a collection of photographs."
+    ],
+    "translation": [
+      "参观博物馆能把课堂知识与人们曾制造、使用或珍视的物品联系起来。但快速走遍每间展厅，可能只留下模糊印象。有意义的参观不要求一个下午看完全部。",
+      "出发前，学生可以选一个感兴趣的问题，例如某个时期普通家庭如何生活。参观时仔细看几件相关物品，认真读说明。记一个细节或画简单形状，有助于更专注观察。若说明引发疑问，可以记下，之后继续阅读。",
+      "目标是在展览与自己的好奇心之间建立对话。选择重点并反思发现，能让我们带着更清楚的理解离开，而不只是带走照片。"
+    ],
+    "outline": [
+      "提出走马观花的问题",
+      "给出参观前中后的做法",
+      "强调问题意识"
+    ],
+    "phrases": [
+      {
+        "en": "a vague impression",
+        "zh": "模糊印象"
+      },
+      {
+        "en": "examine objects closely",
+        "zh": "仔细观察物品"
+      },
+      {
+        "en": "further reading",
+        "zh": "进一步阅读"
+      }
+    ],
+    "task": "段落补全：以 Before going, students can ... 开头，补写参观时一个动作、参观后一个动作，共 3–4 句。可以用熟悉词，不必照抄长句。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 145
+  },
+  {
+    "day": 18,
+    "title": "Protecting Attention from the Phone",
+    "topic": "减少手机分心",
+    "type": "问题与措施",
+    "prompt": "Write an essay about managing phone distractions during study. Write 120–180 words.",
+    "essay": [
+      "A phone can hold dictionaries, course messages and useful notes. It can also interrupt study with a stream of information that has little to do with the task. Managing this distraction requires more than repeatedly telling ourselves to concentrate harder.",
+      "A practical plan begins with the study environment. We can turn off unnecessary notifications and place the phone beyond easy reach when it is not needed. If an exercise requires a dictionary app, we can open that tool for a specific purpose and close it afterwards. Setting a short study period followed by a planned message break can make the arrangement easier to follow. Urgent contact needs should still be considered.",
+      "The aim is not to reject technology, but to decide when it deserves our attention. By making useful actions easy and distractions less immediate, students can give an important task a fair chance."
+    ],
+    "translation": [
+      "手机里有词典、课程消息和有用笔记，也可能不断用无关信息打断学习。管理分心，需要的不只是反复命令自己更专注。",
+      "实际计划从学习环境开始。不需要时关闭无关通知，把手机放到不随手可得的地方。若练习需要词典软件，就为明确目的打开，用后关闭。安排一小段学习，再安排查看消息的休息时间，可能更容易执行。同时应考虑紧急联系需求。",
+      "目标不是拒绝技术，而是决定何时让它获得注意力。让有用动作更容易、分心刺激不那么随手可得，能给重要任务一个公平机会。"
+    ],
+    "outline": [
+      "承认手机的双重作用",
+      "改变环境并安排查看时间",
+      "强调主动安排注意力"
+    ],
+    "phrases": [
+      {
+        "en": "beyond easy reach",
+        "zh": "不随手可及"
+      },
+      {
+        "en": "for a specific purpose",
+        "zh": "为了明确的目的"
+      },
+      {
+        "en": "give a task a fair chance",
+        "zh": "给任务一个充分尝试的机会"
+      }
+    ],
+    "task": "段落补全：保留 A practical plan begins with the study environment，接着写两条自己的手机管理措施，最后补一句例外情况。核对措施是否具体。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 144
+  },
+  {
+    "day": 19,
+    "title": "An Invitation to an English Activity",
+    "topic": "邀请参加英语交流活动",
+    "type": "邀请邮件",
+    "prompt": "Write an email inviting a classmate to an English conversation activity. Include the purpose, time, place and preparation. Write 120–180 words.",
+    "essay": [
+      "Dear Alex,\nI am writing to invite you to a small English conversation activity organised by our class. It will take place in Room 203 of the teaching building this Friday, from four to five in the afternoon. The aim is to practise speaking in a friendly setting, especially for students who feel nervous about using English.",
+      "We will begin with a short introduction and then discuss useful ways to learn a new skill. Everyone can bring one example from daily life. You do not need to prepare a formal speech or use difficult words. A few notes will be enough, and we will help one another when a word is missing.",
+      "I hope you can join us and share your experience of learning photography. Please let me know by Thursday whether you are available so that we can arrange the seats. Best wishes, Li Ming."
+    ],
+    "translation": [
+      "亲爱的 Alex：\n我写信邀请你参加我们班组织的小型英语交流活动。活动本周五下午四点至五点在教学楼203室举行，目的是在友好环境中练习口语，尤其帮助使用英语时紧张的同学。",
+      "我们先简短介绍自己，再讨论学习新技能的有效方式。每人可以带来一个生活例子。不必准备正式演讲或使用难词，记几条提示就够，遇到不会的词我们会互相帮助。",
+      "希望你能来，分享学习摄影的经历。请在周四前告诉我是否有空，以便安排座位。祝好！李明。"
+    ],
+    "outline": [
+      "邀请并交代时间地点目的",
+      "说明活动内容和准备",
+      "请求回复并礼貌结尾"
+    ],
+    "phrases": [
+      {
+        "en": "I am writing to invite you to",
+        "zh": "我写信邀请你参加"
+      },
+      {
+        "en": "take place",
+        "zh": "举行"
+      },
+      {
+        "en": "Please let me know whether",
+        "zh": "请告诉我是否"
+      }
+    ],
+    "task": "段落补全：仿第一段，为自己的同学写一段邀请，填入活动、时间、地点、目的四项。再写一句请求回复。日期是本练习虚构场景，不是实际活动通知。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 145
+  },
+  {
+    "day": 20,
+    "title": "Making Everyday Food Choices",
+    "topic": "日常饮食安排",
+    "type": "建议说明",
+    "prompt": "Write an essay about making practical food choices during a busy university week. Write 120–180 words.",
+    "essay": [
+      "During a busy university week, food choices are often made in a hurry. Students may choose whatever is closest without considering cost, variety or their own needs. A little planning can make daily meals more manageable without turning eating into another difficult assignment.",
+      "One useful step is to learn what the dining hall offers before the busiest period begins. Students can choose different foods across the week and keep a simple option available when classes run late. Comparing prices can help those working with a limited budget. It is also reasonable to share meal ideas with classmates, while remembering that allergies, preferences and other personal needs differ.",
+      "Good planning should be flexible enough for real life. An occasional rushed meal does not make the whole week a failure. By noticing what works and making small adjustments, students can develop a routine that suits their circumstances."
+    ],
+    "translation": [
+      "大学里忙碌的一周，吃什么往往匆忙决定。学生可能只选最近的食物，没有考虑费用、多样性或自身需求。一点规划能让日常吃饭更有条理，而不用把吃饭变成难任务。",
+      "一个有用步骤是在忙起来之前了解食堂供应。可以在一周内选择不同食物，并在课程延长时留一个简单选择。预算有限者可以比较价格。也可以与同学交流用餐想法，但要记住过敏、偏好及其他个人需求不同。",
+      "好的规划要适应现实生活。偶尔一餐匆忙，不代表整周失败。留意有效做法并小幅调整，学生就能形成符合自身情况的习惯。"
+    ],
+    "outline": [
+      "指出匆忙选择的问题",
+      "给出了解供应与预算安排",
+      "强调灵活调整"
+    ],
+    "phrases": [
+      {
+        "en": "in a hurry",
+        "zh": "匆忙地"
+      },
+      {
+        "en": "a limited budget",
+        "zh": "有限的预算"
+      },
+      {
+        "en": "make small adjustments",
+        "zh": "作出小调整"
+      }
+    ],
+    "task": "段落补全：以 A little planning can help students 开头，写两条忙碌时安排用餐的办法，再补一句解释理由。重点检查句子完整、意思明确。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 145
+  },
+  {
+    "day": 21,
+    "title": "A Better Community Sports Area",
+    "topic": "社区运动设施建议",
+    "type": "建议邮件",
+    "prompt": "Write an email to a community centre suggesting improvements to its sports area. Explain the problem and offer practical solutions. Write 120–180 words.",
+    "essay": [
+      "Dear Community Centre Team,\nI am a student living near the centre, and I often use the outdoor sports area at weekends. I appreciate having a free place to exercise with my neighbours. I am writing to suggest a few improvements that could make the space more useful for different age groups.",
+      "At busy times, new visitors sometimes find it difficult to know which activities are suitable for each area. Clear signs and a simple schedule could reduce confusion. It would also help to provide a way for users to report damaged equipment. Before adding new facilities, the centre could collect suggestions from residents, including older people and those with limited mobility.",
+      "These changes could begin on a small scale and be reviewed after a trial period. I would be happy to help collect feedback from student users. Thank you for considering these suggestions.\n\nYours sincerely,\nLi Ming"
+    ],
+    "translation": [
+      "社区中心工作人员：\n我是一名住在附近的学生，周末经常使用户外运动区域。感谢这里为我和邻居提供免费的锻炼场地。我写信提出几项改进，希望它能更好服务不同年龄人群。",
+      "繁忙时，新来的人有时不清楚各区域适合什么活动。清楚标识和简单时间安排能减少困惑，也可以提供报告器材损坏的渠道。新增设施前，中心可收集居民建议，包括老年人和行动受限者。",
+      "这些改变可以先小范围试行，再进行评估。我愿意帮助收集学生使用者的反馈。感谢考虑这些建议。李明敬上。"
+    ],
+    "outline": [
+      "说明身份并肯定现有服务",
+      "提出问题和具体改进",
+      "提供协助并感谢"
+    ],
+    "phrases": [
+      {
+        "en": "reduce confusion",
+        "zh": "减少困惑"
+      },
+      {
+        "en": "on a small scale",
+        "zh": "在小范围内"
+      },
+      {
+        "en": "a trial period",
+        "zh": "试行期"
+      }
+    ],
+    "task": "段落补全：不看第二段，按“一个问题—两项措施—一个理由”写 4 句建议。先用熟悉词写完整，再对照范文调整连接。最后补一句礼貌致谢。",
+    "sources": [
+      {
+        "title": "写作格式参考：中国教育考试网官方样卷；题目、范文与译文均为本项目原创练习",
+        "url": "https://cet.neea.edu.cn/res/Home/1704/55b02330ac17274664f06d9d3db8249d.pdf"
+      }
+    ],
+    "wordCount": 148
+  }
+]

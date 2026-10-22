@@ -1,0 +1,17 @@
+{
+  "name": "词序42 · 四级基础强化",
+  "short_name": "词序42",
+  "description": "42天四级基础强化：600词主学、100词选学，间隔复习和每日写作。",
+  "lang": "zh-CN",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f8f3",
+  "theme_color": "#ed7146",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f16b3b"><meta name="description" content="42天四级词汇冲刺：间隔复习、主动回忆、每日写作。">
+  <title>词序42 · 四级冲刺</title>
+  <link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#home" aria-label="词序42首页"><span class="brand-mark">w<span>·</span></span><span>词序<span class="brand-number">42</span><small>让每一次记忆，有迹可循</small></span></a>
+      <div class="nav-caption">MY LEARNING SPACE</div>
+      <nav aria-label="主导航" id="navigation"></nav>
+      <div class="sidebar-note"><span class="tiny-sun">✳</span><p>小步向前，<br>记忆会给你答案。</p><small>YOUR NEXT CHAPTER STARTS HERE</small></div>
+      <button class="settings-link" data-nav="settings"><span>⚙</span> 计划与设置</button>
+    </aside>
+    <div class="workspace">
+      <header class="topbar"><div><span class="breadcrumb">我的学习空间</span><span class="slash">/</span><span id="page-name">今日学习</span></div><div class="topbar-right"><span id="save-status" class="save-status">本机保存</span><span class="avatar">我</span></div></header>
+      <main id="main" tabindex="-1"></main>
+      <footer class="page-footer">每天一点，离目标近一点。<span>词序 42 · CET-4 SPRINT</span></footer>
+    </div>
+  </div>
+  <nav id="mobile-nav" class="mobile-nav" aria-label="手机导航"></nav>
+  <dialog id="study-dialog" class="study-dialog" aria-label="单词学习"><div id="study-content"></div></dialog>
+  <dialog id="detail-dialog" class="detail-dialog" aria-label="内容详情"><button class="close-button" id="detail-close" aria-label="关闭">✕</button><div id="detail-content"></div></dialog>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript>请开启浏览器 JavaScript 来使用词序42。</noscript>
+  <script src="data/vocabulary.js"></script><script src="data/meta.js"></script><script src="data/learning.js"></script><script src="data/essays.js"></script><script src="engine.js"></script><script src="app.js"></script>
+</body>
+</html>
