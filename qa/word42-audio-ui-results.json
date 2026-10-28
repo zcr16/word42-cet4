@@ -1,0 +1,16 @@
+{
+  "passed": 9,
+  "checks": [
+    "native sentence switches, late events are ignored, same sentence toggles stop, notes/progress preserved",
+    "whole-essay playback advances by sentence; speed applies; stop prevents queued/late continuation",
+    "X, Escape, background visibility and navigation cancel playback",
+    "all 42 essays/126 paragraphs preserve original text and fit 390px layout",
+    "native engine error restores controls and preserves notes; mobile preview captured",
+    "browser English voice fallback works; interruption ignored; missing English voice produces honest error",
+    "restoring a backup and confirmed reset discard old unsaved essay drafts, even across other detail views",
+    "essay error is visible above modal and matches inline status, cancels queue; later word error escapes closed dialog",
+    "voice preparation shows message and permits stop without false speaking; start/end work, stale preparation is ignored, word card shows preparation toast"
+  ],
+  "realSpeech": false,
+  "phoneAccess": false
+}

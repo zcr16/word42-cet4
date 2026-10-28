@@ -11,3 +11,17 @@
 .dashboard-grid>*,.bottom-grid>*,.word-strip>*,.settings-grid>*,.articles-grid>*,.essay-grid>*{min-width:0}.word-strip>div{max-width:48%}.word-strip b{overflow-wrap:anywhere}.word-strip p{min-width:0}.heading-row>div:first-child{min-width:0}
 .detail-content .english,.detail-content .chinese{white-space:pre-line}
 @media(max-width:680px){.bottom-grid,.dashboard-grid,.settings-grid,.articles-grid,.essay-grid{grid-template-columns:minmax(0,1fr)}.hero h2{font-size:22px;max-width:195px}.hero-ring{width:82px;height:82px;right:14px;top:38px}.ring-text b{font-size:26px}.ring-text span{font-size:7px}.heading-row h1{font-size:23px}.hero-ring .ring-text{margin-top:0}.page-footer{flex-wrap:wrap}.word-strip p{max-width:56%}}
+
+/* Sentence audio keeps the original paragraph flow and leaves notes untouched. */
+.essay-player{margin:22px 0 16px;padding:15px;border:1px solid var(--line);border-radius:12px;background:#f8f8f1}
+.essay-player-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.essay-player-controls label{display:flex;align-items:center;gap:7px;font-size:12px;color:#68765b;margin-left:auto}
+.essay-player-controls select{padding:9px 10px;font-size:12px}
+.essay-player .btn{padding:11px 15px}
+.essay-player button:disabled{opacity:.45;cursor:default}
+#essay-speech-status{font-size:12px;line-height:1.6;margin:10px 0 0;color:#68765b}
+.english .essay-sentence{display:inline;font:inherit;line-height:inherit;text-align:left;white-space:pre-wrap;color:inherit;background:transparent;border:0;padding:2px 0;margin:0;border-radius:3px;cursor:pointer;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.english .essay-sentence:hover{background:#f3f1de}
+.english .essay-sentence:focus-visible{outline:2px solid #a1ae76;outline-offset:3px}
+.english .essay-sentence.is-speaking{background:#fff0bf;box-shadow:0 2px 0 #daa650;color:#3d482e}
+@media(max-width:480px){.essay-player-controls{gap:8px}.essay-player .btn{padding:11px 12px;font-size:12px}.essay-player-controls label{margin-left:0}}

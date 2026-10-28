@@ -18,6 +18,20 @@
 .dashboard-grid>*,.bottom-grid>*,.word-strip>*,.settings-grid>*,.articles-grid>*,.essay-grid>*{min-width:0}.word-strip>div{max-width:48%}.word-strip b{overflow-wrap:anywhere}.word-strip p{min-width:0}.heading-row>div:first-child{min-width:0}
 .detail-content .english,.detail-content .chinese{white-space:pre-line}
 @media(max-width:680px){.bottom-grid,.dashboard-grid,.settings-grid,.articles-grid,.essay-grid{grid-template-columns:minmax(0,1fr)}.hero h2{font-size:22px;max-width:195px}.hero-ring{width:82px;height:82px;right:14px;top:38px}.ring-text b{font-size:26px}.ring-text span{font-size:7px}.heading-row h1{font-size:23px}.hero-ring .ring-text{margin-top:0}.page-footer{flex-wrap:wrap}.word-strip p{max-width:56%}}
+
+/* Sentence audio keeps the original paragraph flow and leaves notes untouched. */
+.essay-player{margin:22px 0 16px;padding:15px;border:1px solid var(--line);border-radius:12px;background:#f8f8f1}
+.essay-player-controls{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.essay-player-controls label{display:flex;align-items:center;gap:7px;font-size:12px;color:#68765b;margin-left:auto}
+.essay-player-controls select{padding:9px 10px;font-size:12px}
+.essay-player .btn{padding:11px 15px}
+.essay-player button:disabled{opacity:.45;cursor:default}
+#essay-speech-status{font-size:12px;line-height:1.6;margin:10px 0 0;color:#68765b}
+.english .essay-sentence{display:inline;font:inherit;line-height:inherit;text-align:left;white-space:pre-wrap;color:inherit;background:transparent;border:0;padding:2px 0;margin:0;border-radius:3px;cursor:pointer;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.english .essay-sentence:hover{background:#f3f1de}
+.english .essay-sentence:focus-visible{outline:2px solid #a1ae76;outline-offset:3px}
+.english .essay-sentence.is-speaking{background:#fff0bf;box-shadow:0 2px 0 #daa650;color:#3d482e}
+@media(max-width:480px){.essay-player-controls{gap:8px}.essay-player .btn{padding:11px 12px;font-size:12px}.essay-player-controls label{margin-left:0}}
 </style>
 </head>
 <body>
@@ -2313,6 +2327,148 @@ window.ESSAYS = [
 
 </script>
 <script>
+/* Shared English speech lifecycle for writing and vocabulary; no network calls. */
+(function (root, factory) {
+  const tools = factory();
+  if (typeof module === 'object' && module.exports) module.exports = tools;
+  else { root.Word42SpeechTools = tools; root.Word42Audio = tools.createController(root); }
+})(typeof window !== 'undefined' ? window : globalThis, function () {
+  'use strict';
+
+  // Preserve every character, including inter-sentence whitespace. Protect
+  // decimal points, initials and common abbreviations before finding a boundary.
+  function splitSentences(value) {
+    const text = String(value ?? '');
+    if (!text) return [];
+    const result = [], titles = /^(?:mr|mrs|ms|dr|prof|sr|jr|st|vs|fig|no|approx|dept|inc|ltd|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec)$/i;
+    let start = 0;
+    for (let i = 0; i < text.length; i++) {
+      if (!/[.!?]/.test(text[i])) continue;
+      if (text[i] === '.') {
+        if (/\d/.test(text[i - 1] || '') && /\d/.test(text[i + 1] || '')) continue;
+        if (/[A-Za-z]/.test(text[i + 1] || '')) continue;
+        const token = (text.slice(0, i).match(/([A-Za-z][A-Za-z.]*)$/) || [])[1] || '';
+        if (titles.test(token) || /^(?:e\.g|i\.e)$/i.test(token) || /^[A-Z]$/.test(token)) continue;
+        if (/^(?:[A-Za-z]\.)+[A-Za-z]$/.test(token) || /^(?:a|p)\.m$/i.test(token)) {
+          const next = text.slice(i + 1).trimStart();
+          if (next && !/^(?:I|We|You|They|He|She|It|This|That|These|Those|The|A|An|However|Therefore|Finally|Meanwhile)\b/.test(next)) continue;
+        }
+        if (/^etc$/i.test(token) && /^\s+[a-z]/.test(text.slice(i + 1))) continue;
+      }
+      let end = i + 1;
+      while (end < text.length && /[.!?"'”’\])}]/.test(text[end])) end++;
+      if (end < text.length && !/\s/.test(text[end])) continue;
+      while (end < text.length && /\s/.test(text[end])) end++;
+      result.push(text.slice(start, end));start = end;i = end - 1;
+    }
+    if (start < text.length) result.push(text.slice(start));
+    return result;
+  }
+
+  function createController(env) {
+    let job = null, sequence = 0;
+    // Only fixed lifecycle labels enter diagnostics: never text, notes, URLs,
+    // request IDs or the raw platform error message.
+    const diagnostic = (kind, value) => { try { env.console?.info?.('[Word42Speech] ' + kind + '=' + value); } catch (_) {} };
+    const later = (fn, ms) => env.setTimeout(fn, ms), clear = id => env.clearTimeout(id);
+    const current = (owner, id) => job === owner && owner.requestId === id;
+    const notify = (owner, status, message = '') => owner.onChange({ status, message, id: owner.items[owner.index]?.id, index: owner.index, total: owner.items.length });
+    function cleanup(owner) {
+      clear(owner.timer);clear(owner.voiceTimer);
+      if (owner.voiceListener) env.speechSynthesis?.removeEventListener?.('voiceschanged', owner.voiceListener);
+      owner.voiceListener = null;
+    }
+    function cancelBackend(owner) {
+      try { if (owner.mode === 'native') env.Word42Speech?.stop(); else if (owner.mode === 'browser') env.speechSynthesis?.cancel(); } catch (_) {}
+    }
+    function stop() {
+      const previous = job;job = null;
+      if (!previous) return;
+      cleanup(previous);cancelBackend(previous);notify(previous, 'stop');
+    }
+    function fail(owner, id, message, code = 'speech_error') {
+      if (!current(owner, id)) return;
+      diagnostic('error', code);
+      job = null;cleanup(owner);cancelBackend(owner);notify(owner, 'error', message || '英语朗读暂不可用，请检查系统英语语音。');
+    }
+    function signal(id, status, message) {
+      const owner = job;if (!owner || owner.requestId !== id) return;
+      if (status === 'preparing' && owner.started) return;
+      if (['preparing','start','end','error'].includes(status)) diagnostic('signal', status);
+      if (status === 'preparing') {
+        if (!owner.preparationWaiting) {
+          owner.preparationWaiting = true;clear(owner.timer);
+          owner.timer = later(() => fail(owner, id, '英语声音资源准备超时，请检查网络后重试。', 'preparation_timeout'), 300000);
+        }
+        notify(owner, 'preparing', typeof message === 'string' && message ? message.slice(0, 300) : '正在准备英语声音资源，首次使用请稍候。');
+      } else if (status === 'start') {
+        owner.started = true;
+        clear(owner.timer);
+        owner.timer = later(() => fail(owner, id, '朗读没有正常结束，请点句子重试。', 'completion_timeout'), Math.min(90000, Math.max(15000, owner.items[owner.index].text.length * 150 / owner.rate + 10000)));
+        notify(owner, 'start');
+      } else if (status === 'end') {
+        if (message === 'stopped') { stop();return; }
+        cleanup(owner);notify(owner, 'end');
+        // A callback can itself stop or replace playback.
+        if (!current(owner, id)) return;
+        owner.index++;
+        if (owner.index >= owner.items.length) { job = null;notify(owner, 'complete'); }
+        else begin(owner);
+      } else if (status === 'error') fail(owner, id, typeof message === 'string' ? message.slice(0, 300) : '英语朗读失败，请重试。', owner.mode === 'native' ? 'native_error' : 'browser_error');
+    }
+    env.__word42SpeechEvent = signal;
+    function browserSpeak(owner, id) {
+      const synth = env.speechSynthesis;
+      owner.mode = 'browser';diagnostic('mode', 'browser');
+      if (!synth || typeof env.SpeechSynthesisUtterance !== 'function') { fail(owner, id, '当前设备没有可用的英语朗读服务。', 'browser_unavailable');return; }
+      const useVoice = () => {
+        if (!current(owner, id)) return true;
+        let voices;
+        try { voices = synth.getVoices(); } catch (_) { fail(owner, id, '无法读取设备语音，请检查系统语音设置。', 'voice_list_failed');return true; }
+        const english = voices.filter(voice => /^en(?:[-_]|$)/i.test(voice.lang));
+        const voice = english.find(v => /^en[-_]US$/i.test(v.lang)) || english[0];
+        if (!voice) return false;
+        if (owner.voiceListener) synth.removeEventListener?.('voiceschanged', owner.voiceListener);
+        owner.voiceListener = null;clear(owner.voiceTimer);
+        const utterance = new env.SpeechSynthesisUtterance(owner.items[owner.index].text.trim());
+        owner.utterance = utterance;utterance.lang = voice.lang;utterance.voice = voice;utterance.rate = owner.rate;
+        utterance.onstart = () => signal(id, 'start');utterance.onend = () => signal(id, 'end');
+        utterance.onerror = () => signal(id, 'error', '英语朗读失败，请检查设备英语语音后重试。');
+        try { synth.speak(utterance); } catch (_) { fail(owner, id, '英语朗读暂不可用，请重试。', 'browser_speak_failed'); }
+        return true;
+      };
+      if (useVoice()) return;
+      owner.voiceListener = useVoice;synth.addEventListener?.('voiceschanged', useVoice);
+      owner.voiceTimer = later(() => { if (current(owner, id) && !useVoice()) fail(owner, id, '设备未提供英语声音，请先在系统语音设置中添加英语语音。', 'english_voice_missing'); }, 1500);
+    }
+    function begin(owner) {
+      if (job !== owner) return;
+      const id = 'word42-' + Date.now().toString(36) + '-' + (++sequence);owner.requestId = id;
+      owner.started = false;owner.preparationWaiting = false;
+      notify(owner, 'loading');if (!current(owner, id)) return;
+      owner.timer = later(() => fail(owner, id, '朗读启动超时，请检查英语语音服务后重试。', 'start_timeout'), 12000);
+      const bridge = env.Word42Speech;
+      if (bridge && typeof bridge.speak === 'function' && typeof bridge.stop === 'function') {
+        owner.mode = 'native';diagnostic('mode', 'native');
+        try { bridge.speak(id, owner.items[owner.index].text.trim(), owner.rate); } catch (_) { fail(owner, id, '手机英语朗读服务暂不可用，请重试。', 'native_bridge_failed'); }
+      } else browserSpeak(owner, id);
+    }
+    function play(items, options = {}) {
+      stop();
+      const valid = items.filter(item => item && typeof item.text === 'string' && item.text.trim()).map(item => ({ id: item.id, text: item.text }));
+      if (!valid.length) return;
+      job = { items: valid, index: 0, requestId: '', rate: options.rate === 0.75 ? 0.75 : 1, onChange: typeof options.onChange === 'function' ? options.onChange : () => {}, mode: '', timer: null, voiceTimer: null };
+      begin(job);
+    }
+    env.addEventListener?.('pagehide', stop);
+    env.document?.addEventListener?.('visibilitychange', () => { if (env.document.visibilityState === 'hidden') stop(); });
+    return { play, stop, isActive: () => !!job };
+  }
+  return { splitSentences, createController };
+});
+
+</script>
+<script>
 /* 词序42 — local-first vocabulary sprint. No accounts or tracking. */
 (function () {
   'use strict';
@@ -2330,6 +2486,9 @@ window.ESSAYS = [
   let state, prefs = { readDays: [], readingNotes: {}, showTranslation: true };
   let storageOK = true, view = 'home', libraryTab = 'core', search = '', showBasic = false, page = 1, session = null;
   let toastTimer, installPrompt = null;
+  const audio = window.Word42Audio;
+  let essayAudio = null, speechEpoch = 0, wordAudioId = '', audioRate = 1;
+  const essayNoteDrafts = new Map();
   try { const raw = localStorage.getItem(KEY); state = raw ? E.validateImport(JSON.parse(raw), words) : E.createState(today()); }
   catch (error) { state = E.createState(today()); storageOK = false; }
   try { const raw = JSON.parse(localStorage.getItem(PREF) || '{}'); if (raw && typeof raw === 'object') { prefs.readDays = Array.isArray(raw.readDays) ? raw.readDays.filter(n => Number.isInteger(n) && n >= 1 && n <= 42) : []; prefs.readingNotes = raw.readingNotes && typeof raw.readingNotes === 'object' ? raw.readingNotes : {}; prefs.showTranslation = raw.showTranslation !== false; } } catch (_) { storageOK = false; }
@@ -2348,12 +2507,12 @@ window.ESSAYS = [
   };
   const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${icons[name] || icons.home}</svg>`;
   const navs = [['home','今日学习'],['library','我的词库'],['progress','42 天计划'],['methods','学习方法'],['writing','每日写作']];
-  function toast(message) { $('#toast').textContent = message; $('#toast').classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => $('#toast').classList.remove('visible'), 3200); }
+  function toast(message) { const notice=$('#toast'),dialogs=document.querySelectorAll('dialog[open]'),host=dialogs[dialogs.length-1]||document.body;if(notice.parentElement!==host)host.appendChild(notice);notice.textContent = message; notice.classList.add('visible'); clearTimeout(toastTimer); toastTimer = setTimeout(() => notice.classList.remove('visible'), 3200); }
   function persist(next = state) { state = next; try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; } catch (_) { storageOK = false; toast('本机保存失败，请到设置导出备份，避免丢失进度。'); } updateSave(); }
   function savePrefs() { try { localStorage.setItem(PREF, JSON.stringify(prefs)); } catch (_) { toast('阅读记录保存失败，请检查浏览器存储空间。'); } }
   function updateSave() { $('#save-status').textContent = storageOK ? '进度存于本机' : '请导出进度备份'; }
   function stats() { return E.getStats(state, words, today()); }
-  function go(name) { view = navs.some(n => n[0] === name) || name === 'settings' ? name : 'home'; location.hash = view; render(); window.scrollTo({top:0,behavior:'instant'}); }
+  function go(name) { stopSpeech();rememberEssayNote();if($('#detail-dialog').open)$('#detail-dialog').close();view = navs.some(n => n[0] === name) || name === 'settings' ? name : 'home'; location.hash = view; render(); window.scrollTo({top:0,behavior:'instant'}); }
   function navHTML(mobile) { return navs.map(([id,label]) => `<button data-nav="${id}" class="${mobile ? '' : 'nav-item '}${id === view ? 'active' : ''}" ${id === view ? 'aria-current="page"' : ''}>${icon(id)}<span>${mobile ? ({home:'今日',library:'词库',progress:'计划',methods:'方法',writing:'写作'}[id]) : label}</span></button>`).join(''); }
   function heading(title, sub, label = 'MAKE EVERY DAY COUNT') { return `<div class="heading-row"><div><div class="eyebrow">${label}</div><h1>${title}</h1><p>${sub}</p></div><div class="date-badge">${icon('progress')}${new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'})}</div></div>`; }
   function render() { $('#navigation').innerHTML = navHTML(false); $('#mobile-nav').innerHTML = navHTML(true); $('#page-name').textContent = navs.find(n => n[0] === view)?.[1] || '计划与设置'; const renderers = {home:renderHome,library:renderLibrary,progress:renderProgress,methods:renderMethods,writing:renderWriting,settings:renderSettings}; $('#main').innerHTML = renderers[view](); updateSave(); }
@@ -2378,17 +2537,41 @@ window.ESSAYS = [
   function renderProgress() { const s=stats();return `${heading('42 天，让改变看得见。','前 35 天循序渐进学 600 词，最后 7 天集中巩固；另 100 词选学。','YOUR 42-DAY JOURNEY')}<div class="stat-grid"><div class="stat"><label>冲刺进度</label><strong>${Math.min(s.day,42)}<small> / 42 天</small></strong><small>开始于 ${state.startDate}</small></div><div class="stat"><label>学过的词</label><strong>${s.learned}<small> / ${s.total}</small></strong><small>完成第一次主动回忆</small></div><div class="stat"><label>进入长间隔</label><strong>${s.mastered || 0}<small> 词</small></strong><small>仍需要继续复习</small></div><div class="stat"><label>累计打卡</label><strong>${s.checkInDays}<small> 天</small></strong><small>连续打卡 ${s.streak} 天</small></div></div><section class="panel"><div class="section-heading"><h2>我的冲刺日历</h2><span class="pill">${s.day<=35?'积累期':'巩固期'}</span></div><div class="calendar-grid">${Array.from({length:42},(_,i)=>{const date=E.addDays(state.startDate,i),done=state.daily[date]?.checkedIn;return `<div class="calendar-cell ${done?'done':''} ${date===today()?'today':''}" title="${date}"><b>${String(i+1).padStart(2,'0')}</b><small>${done?'✓ 已打卡':i<35?`${i<5?10:i<15?15:20}词 + 复习`:'巩固复习'}</small></div>`;}).join('')}</div><p class="calendar-note">复习间隔依表现按 1、2、4、7、15 天逐步拉长，后续继续长期维护。忘记后会缩短间隔、加入重试。图表只反映学习记录，不预测个人记忆率。第 42 天后到期词仍然保留。</p></section><section class="panel" style="margin-top:22px"><div class="section-heading"><h2>今日完成条件</h2><button class="btn btn-primary" data-action="checkin">${s.checkedIn?'✓ 已打卡':'记录今天的坚持'}</button></div><p class="subtle">新词 ${s.newDone} / ${s.newGoal} · 到期及重试剩余 ${s.dueRemaining} 词。完成今日新词与待复习词后即可打卡。拼写自测与写作作为加练，不占用词汇打卡条件。</p></section>`; }
   function renderMethods() {return `${heading('用对方法，让记忆更深。','把间隔复习、主动检索和表达迁移，变成每天做得到的小动作。','LEARN HOW TO LEARN')}<div class="notice">这里采用间隔重复与主动检索的研究原则。复习天数是可执行的学习安排，并非对每个人都精确适用的“艾宾浩斯公式”。</div><div class="articles-grid">${articles.map((a,i)=>`<button class="article-card" data-article="${esc(a.id)}"><span class="eyebrow">FIELD NOTE ${String(i+1).padStart(2,'0')} · ${a.minutes || 3} MIN READ</span><h2>${esc(a.title)}</h2><p>${esc(a.subtitle)}</p><small>阅读方法 · 今天就试一试 ↗</small></button>`).join('')}</div><section class="panel" style="margin-top:22px"><div class="section-heading"><h2>把方法用起来</h2></div><div class="settings-actions"><button class="btn btn-primary" data-start="all">先回忆，再翻卡</button><button class="btn btn-light" data-quiz="spelling">拼写检索 10 题</button><button class="btn btn-light" data-quiz="choice">词义自测 10 题</button></div><p class="subtle" style="margin-top:15px">优先从已学词出题；尚未学词时使用冲刺词预习。自测独立计分，答错的已学词会重新进入今日复习。</p></section>`; }
   function renderWriting() { const day=Math.min(Math.max(1,stats().day),42);return `${heading('每天一篇，把表达积累下来。',`42 篇原创四级训练范文 · 中英对照 · 结构拆解 · 已练习 ${prefs.readDays.length} 篇`,'DAILY WRITING STUDIO')}<div class="notice">以公开四级写作要求和常见主题为依据创作的训练范文，非真题原文、押题或官方标准答案。前期按任务练句子与段落，后期再限时独立写作；“读懂”不等于“会写”。</div><div class="essay-grid">${essays.map(e=>`<button class="essay-card ${e.day===day?'active':''}" data-essay="${e.day}"><span class="day-label">DAY ${String(e.day).padStart(2,'0')} <span>${prefs.readDays.includes(e.day)?'✓ 已练习':e.day===day?'今日推荐':''}</span></span><h2>${esc(e.title)}</h2><p>${esc(e.topic)} · ${esc(e.type)}</p><small>${e.wordCount || countWords(e.essay.join(' '))} words · 阅读、仿写、迁移 ↗</small></button>`).join('')}</div>`; }
-  function renderSettings() { const meta=window.WORD_META||{};return `${heading('为自己，安排一个好节奏。','词库离线可读，进度保存在当前设备。换手机前，请先导出备份。','PLAN & PREFERENCES')}<div class="settings-grid"><section class="panel settings-panel"><h2>你的冲刺计划</h2><p>以基础薄弱为起点：第1–5天每天10词，第6–15天15词，第16–35天20词，共600词；第36–42天集中复习。另100词选学。漏学后可继续补学，额外加入的词可能延长计划。</p><label for="start-date">计划开始日期（修改不会删除已学记录）</label><input type="date" id="start-date" max="${today()}" value="${state.startDate}"> <button class="btn btn-light" data-action="save-date">保存</button><p class="settings-small" style="margin-top:16px">复习与打卡使用设备本地日期。手机换时区会影响“今天”的划分。请保持设备日期正确。</p><button class="btn btn-light" data-action="install">安装 / 添加到手机桌面 ↗</button></section><section class="panel settings-panel"><h2>备份与恢复</h2><p>浏览器清理数据、换设备或换网址后，进度不会自动同步。建议每周备份一次。</p><div class="settings-actions"><button class="btn btn-primary" data-action="export">导出备份文件</button><button class="btn btn-light" data-action="backup-text">显示备份文本</button><label class="btn btn-light" style="margin:0;cursor:pointer">导入文件<input type="file" id="import-file" accept="application/json,.json" hidden></label></div><label for="backup-text">也可以粘贴备份文本恢复（会覆盖当前记录）</label><textarea id="backup-text" placeholder="粘贴导出的 JSON 备份内容…" spellcheck="false"></textarea><button class="btn btn-light" data-action="import-text">校验并恢复</button></section><section class="panel settings-panel"><h2>关于词库与筛选</h2><p>词库共 ${words.length.toLocaleString()} 条，冲刺重点 ${core.length} 条。保留来源中全部四级和高中标签词；通过基础标签及人工基础词规则默认隐藏简单词。</p><p>700 词优先参考通用语料频率及考试词库交集；它是冲刺选词方案，不是已核验的四级真题高频榜，也不能替代历年真题练习。</p><p class="settings-small">开源词库的四级标签数量可能与某版官方大纲不同，软件不宣称覆盖所有现行考试词汇。可在词库页查看来源全集，并把需要的扩展词加入计划。</p><a class="source-link" href="https://github.com/skywind3000/ECDICT" target="_blank" rel="noopener noreferrer">查看 GitHub 开源词库 ECDICT ↗</a>${meta.additionalSource?`<p>${esc(meta.additionalSource)}</p>`:''}</section><section class="panel settings-panel"><h2>Mate 80 · HarmonyOS 7.0</h2><p>手机浏览器打开应用网址即可使用。若浏览器菜单提供“添加到桌面”，可创建快捷入口；具体安装行为以设备浏览器为准。</p><p>原生鸿蒙版使用 ArkWeb 本地页面，配套工程需要 DevEco Studio 编译、签名后安装。网页可用不代表已经获得可安装的 HAP。</p><p class="settings-small">朗读使用设备浏览器语音能力；缺少英语声音时会提示。网页不提供关闭后的系统提醒。应用不使用后台跟踪。</p><button class="text-button" data-action="reset">清空本机学习进度并重新开始</button></section></div>`; }
+  function renderSettings() { const meta=window.WORD_META||{};return `${heading('为自己，安排一个好节奏。','词库离线可读，进度保存在当前设备。换手机前，请先导出备份。','PLAN & PREFERENCES')}<div class="settings-grid"><section class="panel settings-panel"><h2>你的冲刺计划</h2><p>以基础薄弱为起点：第1–5天每天10词，第6–15天15词，第16–35天20词，共600词；第36–42天集中复习。另100词选学。漏学后可继续补学，额外加入的词可能延长计划。</p><label for="start-date">计划开始日期（修改不会删除已学记录）</label><input type="date" id="start-date" max="${today()}" value="${state.startDate}"> <button class="btn btn-light" data-action="save-date">保存</button><p class="settings-small" style="margin-top:16px">复习与打卡使用设备本地日期。手机换时区会影响“今天”的划分。请保持设备日期正确。</p><button class="btn btn-light" data-action="install">安装 / 添加到手机桌面 ↗</button></section><section class="panel settings-panel"><h2>备份与恢复</h2><p>浏览器清理数据、换设备或换网址后，进度不会自动同步。建议每周备份一次。</p><div class="settings-actions"><button class="btn btn-primary" data-action="export">导出备份文件</button><button class="btn btn-light" data-action="backup-text">显示备份文本</button><label class="btn btn-light" style="margin:0;cursor:pointer">导入文件<input type="file" id="import-file" accept="application/json,.json" hidden></label></div><label for="backup-text">也可以粘贴备份文本恢复（会覆盖当前记录）</label><textarea id="backup-text" placeholder="粘贴导出的 JSON 备份内容…" spellcheck="false"></textarea><button class="btn btn-light" data-action="import-text">校验并恢复</button></section><section class="panel settings-panel"><h2>关于词库与筛选</h2><p>词库共 ${words.length.toLocaleString()} 条，冲刺重点 ${core.length} 条。保留来源中全部四级和高中标签词；通过基础标签及人工基础词规则默认隐藏简单词。</p><p>700 词优先参考通用语料频率及考试词库交集；它是冲刺选词方案，不是已核验的四级真题高频榜，也不能替代历年真题练习。</p><p class="settings-small">开源词库的四级标签数量可能与某版官方大纲不同，软件不宣称覆盖所有现行考试词汇。可在词库页查看来源全集，并把需要的扩展词加入计划。</p><a class="source-link" href="https://github.com/skywind3000/ECDICT" target="_blank" rel="noopener noreferrer">查看 GitHub 开源词库 ECDICT ↗</a>${meta.additionalSource?`<p>${esc(meta.additionalSource)}</p>`:''}</section><section class="panel settings-panel"><h2>Mate 80 · HarmonyOS 7.0</h2><p>手机浏览器打开应用网址即可使用。若浏览器菜单提供“添加到桌面”，可创建快捷入口；具体安装行为以设备浏览器为准。</p><p>原生鸿蒙版使用 ArkWeb 本地页面，配套工程需要 DevEco Studio 编译、签名后安装。网页可用不代表已经获得可安装的 HAP。</p><p class="settings-small">朗读优先使用手机系统英语语音；网页使用浏览器英语声音。缺少英语声音时会提示。网页不提供关闭后的系统提醒。应用不使用后台跟踪。</p><button class="text-button" data-action="reset">清空本机学习进度并重新开始</button></section></div>`; }
   function shortMeaning(text) { return String(text).split('\n').slice(0,2).map(line=>line.split(/[,，;；]/).slice(0,3).join('，')).join('\n'); }
   function countWords(text) { return (text.match(/[A-Za-z]+(?:['’\-][A-Za-z]+)*/g)||[]).length; }
-  function openDetail(html) { $('#detail-content').innerHTML=`<div class="detail-content">${html}</div>`; if(!$('#detail-dialog').open)$('#detail-dialog').showModal(); $('#detail-dialog').scrollTop=0; }
+  function rememberEssayNote() { const field=$('#essay-notes');if($('#detail-dialog').open&&essayAudio&&field&&Number(field.dataset.day)===essayAudio.day)essayNoteDrafts.set(essayAudio.day,field.value); }
+  function discardEssayDrafts() { stopSpeech();essayAudio=null;essayNoteDrafts.clear();if($('#detail-dialog').open)$('#detail-dialog').close();$('#detail-content').replaceChildren(); }
+  function updateEssayAudio(message) {
+    const current=essayAudio;if(!current)return;
+    document.querySelectorAll('[data-sentence]').forEach(button=>{const selected=Number(button.dataset.sentence)===current.activeIndex&&current.reading;button.classList.toggle('is-speaking',selected&&current.speaking);button.setAttribute('aria-pressed',String(selected));});
+    const status=$('#essay-speech-status');if(status&&message!==undefined)status.textContent=message;
+    const stop=$('[data-action="essay-stop"]');if(stop)stop.disabled=!current.reading;
+    const play=$('[data-action="essay-play"]');if(play)play.textContent=current.speaking?'↺ 从头朗读整篇':'▶ 朗读整篇';
+  }
+  function stopSpeech() { speechEpoch++;wordAudioId='';audio?.stop();if(essayAudio){essayAudio.reading=false;essayAudio.speaking=false;essayAudio.activeIndex=-1;updateEssayAudio('已停止。点任一句可以单独听。');} }
+  function playEssay(index=0, whole=false) {
+    const current=essayAudio;if(!current||!$('#detail-dialog').open)return;
+    if(!whole&&current.reading&&current.activeIndex===index){stopSpeech();return;}
+    stopSpeech();if(!audio){toast('朗读组件未加载，请重新打开应用。');return;}
+    const epoch=++speechEpoch;current.reading=true;current.activeIndex=index;let preparationToastShown=false;
+    const items=(whole?current.sentences.slice(index):[current.sentences[index]]).map((text,i)=>({id:index+i,text}));
+    audio.play(items,{rate:audioRate,onChange:event=>{
+      if(epoch!==speechEpoch||essayAudio!==current||!$('#detail-dialog').open)return;
+      if(['loading','preparing','start'].includes(event.status)){current.activeIndex=Number(event.id);current.reading=true;current.speaking=event.status==='start';updateEssayAudio(event.status==='preparing'?event.message:`${current.speaking?'正在朗读':'准备朗读'}第 ${current.activeIndex+1} / ${current.sentences.length} 句${whole?' · 整篇顺序播放':''}`);if(event.status==='preparing'&&!preparationToastShown){preparationToastShown=true;toast(event.message);}}
+      else if(event.status==='end'){current.speaking=false;updateEssayAudio();}
+      else{current.reading=false;current.speaking=false;current.activeIndex=-1;updateEssayAudio(event.status==='error'?event.message:event.status==='complete'?(whole?'整篇读完了。点任一句可以再听。':'这句读完了。点其他句子继续听。'):'已停止。点任一句可以单独听。');if(event.status==='error')toast(event.message);}
+    }});
+  }
+  function openDetail(html) { stopSpeech();rememberEssayNote();essayAudio=null;$('#detail-content').innerHTML=`<div class="detail-content">${html}</div>`; if(!$('#detail-dialog').open)$('#detail-dialog').showModal(); $('#detail-dialog').scrollTop=0; }
   function sourcesHTML(sources) { return (sources||[]).length?`<h2>参考来源</h2><ul class="source-list">${sources.filter(s=>/^https:\/\//.test(s.url)).map(s=>`<li><a class="source-link" href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.title)} ↗</a></li>`).join('')}</ul>`:''; }
   function showArticle(id) { const a=articles.find(x=>String(x.id)===id);if(!a)return;openDetail(`<span class="eyebrow">LEARNING FIELD NOTES · ${a.minutes||3} MIN</span><h1>${esc(a.title)}</h1><p>${esc(a.subtitle)}</p>${a.body.map(p=>`<p>${esc(p)}</p>`).join('')}<h2>今天就这样做</h2><ol>${a.steps.map(p=>`<li>${esc(p)}</li>`).join('')}</ol>${sourcesHTML(a.sources)}<p class="subtle">研究支持学习原则；实际效果因材料、投入与复习安排而异。</p>`); }
-  function showEssay(day) {const e=essays.find(x=>x.day===day);if(!e)return;openDetail(`<span class="eyebrow">DAY ${String(day).padStart(2,'0')} · ${e.wordCount||countWords(e.essay.join(' '))} WORDS · 原创训练范文</span><h1 style="font-family:Georgia,serif">${esc(e.title)}</h1><span class="pill">${esc(e.topic)} · ${esc(e.type)}</span><h2>${e.day<=5?'先读懂句子，不急着整篇写':e.day<=15?'先仿写一句，再看范文':e.day<=28?'先练段落，再连成篇':'先写，再对照范文'}</h2><div class="callout">${esc(e.prompt)}</div><label class="read-toggle"><input type="checkbox" id="translation-toggle" ${prefs.showTranslation?'checked':''}> 显示逐段中文对照</label>${e.essay.map((p,i)=>`<p class="english">${esc(p)}</p><p class="chinese" ${prefs.showTranslation?'':'hidden'}>${esc(e.translation[i]||'')}</p>`).join('')}<h2>文章是怎么展开的</h2><ol>${e.outline.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><h2>把好表达带走</h2>${e.phrases.map(p=>`<div class="phrase"><b>${esc(p.en)}</b><span>${esc(p.zh)}</span></div>`).join('')}<h2>今日迁移练习</h2><div class="callout">${esc(e.task)}</div><label class="read-toggle" for="essay-notes">留下你的仿写或修改笔记</label><textarea maxlength="20000" id="essay-notes" data-day="${day}" placeholder="试着用自己的经历，重写其中一个例子…">${esc(prefs.readingNotes[day]||'')}</textarea><button class="btn btn-primary" data-read="${day}" style="margin-top:16px">${prefs.readDays.includes(day)?'✓ 已练习 · 保存笔记':'保存笔记并标记已练习'}</button>${sourcesHTML(e.sources)}`); }
+  function showEssay(day) {const e=essays.find(x=>x.day===day);if(!e)return;const paragraphs=e.essay.map(p=>window.Word42SpeechTools.splitSentences(p));let sentenceIndex=0;openDetail(`<span class="eyebrow">DAY ${String(day).padStart(2,'0')} · ${e.wordCount||countWords(e.essay.join(' '))} WORDS · 原创训练范文</span><h1 style="font-family:Georgia,serif">${esc(e.title)}</h1><span class="pill">${esc(e.topic)} · ${esc(e.type)}</span><h2>${e.day<=5?'先读懂句子，不急着整篇写':e.day<=15?'先仿写一句，再看范文':e.day<=28?'先练段落，再连成篇':'先写，再对照范文'}</h2><div class="callout">${esc(e.prompt)}</div><section class="essay-player" aria-label="英语朗读"><div class="essay-player-controls"><button type="button" class="btn btn-primary" data-action="essay-play">▶ 朗读整篇</button><button type="button" class="btn btn-light" data-action="essay-stop" disabled>■ 停止</button><label for="essay-rate">语速<select id="essay-rate"><option value="0.75" ${audioRate===0.75?'selected':''}>慢速</option><option value="1" ${audioRate===1?'selected':''}>正常</option></select></label></div><p id="essay-speech-status" role="status" aria-live="polite">点任一句单独听，再点一次停止；点其他句子立即切换。</p></section><label class="read-toggle"><input type="checkbox" id="translation-toggle" ${prefs.showTranslation?'checked':''}> 显示逐段中文对照</label>${paragraphs.map((sentences,i)=>`<p class="english" lang="en">${sentences.map(text=>`<button type="button" class="essay-sentence" data-sentence="${sentenceIndex++}" aria-pressed="false">${esc(text)}</button>`).join('')}</p><p class="chinese" ${prefs.showTranslation?'':'hidden'}>${esc(e.translation[i]||'')}</p>`).join('')}<h2>文章是怎么展开的</h2><ol>${e.outline.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><h2>把好表达带走</h2>${e.phrases.map(p=>`<div class="phrase"><b>${esc(p.en)}</b><span>${esc(p.zh)}</span></div>`).join('')}<h2>今日迁移练习</h2><div class="callout">${esc(e.task)}</div><label class="read-toggle" for="essay-notes">留下你的仿写或修改笔记</label><textarea maxlength="20000" id="essay-notes" data-day="${day}" placeholder="试着用自己的经历，重写其中一个例子…">${esc(essayNoteDrafts.get(day)??prefs.readingNotes[day]??'')}</textarea><button class="btn btn-primary" data-read="${day}" style="margin-top:16px">${prefs.readDays.includes(day)?'✓ 已练习 · 保存笔记':'保存笔记并标记已练习'}</button>${sourcesHTML(e.sources)}`);essayAudio={day,sentences:paragraphs.flat(),activeIndex:-1,reading:false,speaking:false}; }
   function showWord(id) {const w=byId.get(id);if(!w)return; const r=state.records[w.id];openDetail(`<span class="eyebrow">${w.core?'CORE 700':'EXTENDED VOCABULARY'}</span><h1 style="font:42px Georgia,serif">${esc(w.word)}</h1><p>${esc(w.phonetic?'/'+w.phonetic+'/':'')}</p><p style="white-space:pre-line">${esc(w.meaning)}</p><div class="settings-actions"><button class="btn btn-light" data-speak="${esc(w.id)}">♪ 朗读</button><button class="btn btn-light" data-favorite="${esc(w.id)}">${state.favoriteIds.includes(w.id)?'★ 已收藏':'☆ 收藏'}</button>${(!w.core || core.indexOf(w)>=600)?`<button class="btn btn-primary" data-extra="${esc(w.id)}">${state.knownIds.includes(w.id)?'恢复学习计划':state.extraIds.includes(w.id)?'已加入计划':'加入学习计划'}</button>`:''}</div><p class="subtle">${r?`下次复习：${esc(r.due)} · 累计尝试 ${r.attempts} 次`:'尚未开始学习'}</p><h2>加深记忆的小动作</h2><p>先合上释义，用自己的话说出意思；再用这个词写一句与你生活有关的句子。次日回忆时先试一次，再看答案。</p>`); }
-  function speak(id) {const w=byId.get(id);if(!w)return;if(!('speechSynthesis' in window)){toast('当前设备不支持网页朗读，请参考音标。');return;}const voices=speechSynthesis.getVoices(),voice=voices.find(v=>/^en[-_]/i.test(v.lang));if(voices.length&&!voice){toast('设备未安装英语语音，请在系统中添加。');return;}speechSynthesis.cancel();const utter=new SpeechSynthesisUtterance(w.word);utter.lang='en-US';utter.rate=.85;if(voice)utter.voice=voice;utter.onerror=()=>toast('朗读暂不可用，请检查系统英语语音。');speechSynthesis.speak(utter);}
-  function openStudy(mode) {const queue=E.getQueue(state,words,today(),mode).slice(0,25);if(!queue.length){toast(mode==='review'?'没有到期复习词。先学习新词，明天再来回忆。':'这部分任务已完成，可以打卡或做一次自测。');return;}session={type:'cards',mode,queue:queue.map(x=>({id:String(x.id),kind:x.kind})),total:queue.length,completed:0,revealed:false,retries:[],date:today()};$('#study-dialog').showModal();renderStudy();}
-  function renderStudy() {if(!session)return; const item=session.queue[0];if(!item){renderFinish();return;}const w=byId.get(item.id);if(!w){session.queue.shift();renderStudy();return;}if(session.type!=='cards'){renderQuiz(w);return;}const labels={new:'初次见面 · 读音与词义',review:'到期重逢 · 主动检索',retry:'再试一次 · 加深记忆'};$('#study-content').innerHTML=`<div class="study-top"><span>${session.mode==='review'?'到期复习':'今日学习'} · 已完成 ${session.completed} / ${session.total}</span><button class="close-button" data-action="close-study" aria-label="保存并退出学习">✕</button></div><div class="study-progress"><i style="width:${Math.min(100,session.completed/session.total*100)}%"></i></div><div class="flashcard"><span class="pill">${labels[item.kind]||labels.review}</span><div class="flash-word">${esc(w.word)}</div><div class="phonetic-line">${esc(w.phonetic?'/'+w.phonetic+'/':'')}<button class="icon-button" data-speak="${esc(w.id)}" aria-label="朗读单词">♪</button><button class="icon-button ${state.favoriteIds.includes(w.id)?'selected':''}" data-favorite="${esc(w.id)}" aria-label="收藏单词">${state.favoriteIds.includes(w.id)?'★':'☆'}</button></div>${session.revealed?`<div class="meaning">${esc(shortMeaning(w.meaning))}</div>${w.meaning!==shortMeaning(w.meaning)?`<details class="meaning-more"><summary>展开完整释义</summary><p style="white-space:pre-line;line-height:1.9;margin-top:12px">${esc(w.meaning)}</p></details>`:''}<p class="subtle">先掌握常见意思，再口头造句。第一遍不必背下所有义项。</p>`:'<p class="recall-hint">先在脑海里说出它的意思。<br>哪怕一时想不起来，也给自己几秒钟。</p>'}</div><div class="study-bottom">${session.revealed?'<div class="rating-row"><button class="rating again" data-grade="again">没想起来<small>隔几个词再试</small></button><button class="rating" data-grade="hard">有点模糊<small>缩短间隔</small></button><button class="rating good" data-grade="good">记住了<small>按计划复习</small></button></div>':'<button class="btn btn-primary wide" data-action="reveal">翻开答案 · 检查回忆</button>'}<p class="study-caption">诚实反馈，比刷完数量更重要。每次作答都会保存。</p></div>`;}
+  function speak(id) {const w=byId.get(id);if(!w)return;if(wordAudioId===id&&audio?.isActive()){stopSpeech();return;}stopSpeech();if(!audio){toast('朗读组件未加载，请重新打开应用。');return;}const epoch=++speechEpoch;wordAudioId=id;let preparationToastShown=false;audio.play([{id,text:w.word}],{rate:audioRate,onChange:event=>{if(epoch!==speechEpoch)return;if(event.status==='error'){wordAudioId='';toast(event.message);}else if(event.status==='preparing'&&!preparationToastShown){preparationToastShown=true;toast(event.message);}else if(['complete','stop'].includes(event.status))wordAudioId='';}});}
+
+  function openStudy(mode) {stopSpeech();const queue=E.getQueue(state,words,today(),mode).slice(0,25);if(!queue.length){toast(mode==='review'?'没有到期复习词。先学习新词，明天再来回忆。':'这部分任务已完成，可以打卡或做一次自测。');return;}session={type:'cards',mode,queue:queue.map(x=>({id:String(x.id),kind:x.kind})),total:queue.length,completed:0,revealed:false,retries:[],date:today()};$('#study-dialog').showModal();renderStudy();}
+  function renderStudy() {stopSpeech();if(!session)return; const item=session.queue[0];if(!item){renderFinish();return;}const w=byId.get(item.id);if(!w){session.queue.shift();renderStudy();return;}if(session.type!=='cards'){renderQuiz(w);return;}const labels={new:'初次见面 · 读音与词义',review:'到期重逢 · 主动检索',retry:'再试一次 · 加深记忆'};$('#study-content').innerHTML=`<div class="study-top"><span>${session.mode==='review'?'到期复习':'今日学习'} · 已完成 ${session.completed} / ${session.total}</span><button class="close-button" data-action="close-study" aria-label="保存并退出学习">✕</button></div><div class="study-progress"><i style="width:${Math.min(100,session.completed/session.total*100)}%"></i></div><div class="flashcard"><span class="pill">${labels[item.kind]||labels.review}</span><div class="flash-word">${esc(w.word)}</div><div class="phonetic-line">${esc(w.phonetic?'/'+w.phonetic+'/':'')}<button class="icon-button" data-speak="${esc(w.id)}" aria-label="朗读单词">♪</button><button class="icon-button ${state.favoriteIds.includes(w.id)?'selected':''}" data-favorite="${esc(w.id)}" aria-label="收藏单词">${state.favoriteIds.includes(w.id)?'★':'☆'}</button></div>${session.revealed?`<div class="meaning">${esc(shortMeaning(w.meaning))}</div>${w.meaning!==shortMeaning(w.meaning)?`<details class="meaning-more"><summary>展开完整释义</summary><p style="white-space:pre-line;line-height:1.9;margin-top:12px">${esc(w.meaning)}</p></details>`:''}<p class="subtle">先掌握常见意思，再口头造句。第一遍不必背下所有义项。</p>`:'<p class="recall-hint">先在脑海里说出它的意思。<br>哪怕一时想不起来，也给自己几秒钟。</p>'}</div><div class="study-bottom">${session.revealed?'<div class="rating-row"><button class="rating again" data-grade="again">没想起来<small>隔几个词再试</small></button><button class="rating" data-grade="hard">有点模糊<small>缩短间隔</small></button><button class="rating good" data-grade="good">记住了<small>按计划复习</small></button></div>':'<button class="btn btn-primary wide" data-action="reveal">翻开答案 · 检查回忆</button>'}<p class="study-caption">诚实反馈，比刷完数量更重要。每次作答都会保存。</p></div>`;}
   function gradeCard(rating) {if(!session||session.type!=='cards'||!session.revealed)return;const item=session.queue.shift();try{persist(E.grade(state,item.id,rating,today()));}catch(err){toast(err.message);session.queue.unshift(item);return;}if(rating==='again'){session.queue.push({...item,kind:'retry'});}else{session.completed++;}session.revealed=false;renderStudy();render();}
   function shuffle(list) {const result=[...list];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
   function startFoundationCheck() { const ids=(window.WORD_META||{}).foundationCheckIds || []; const pool=ids.map(id=>byId.get(String(id))).filter(Boolean); const chosen=(pool.length?pool:words.filter(w=>w.base&&w.word.length>=5)).slice(0,20); if(!chosen.length){toast('基础词库尚未加载。');return;} session={type:'choice',queue:chosen.map(w=>({id:String(w.id)})),total:chosen.length,completed:0,correct:0,answered:false,wrong:[],date:today(),preview:true,foundation:true}; $('#study-dialog').showModal();renderStudy(); }
@@ -2397,7 +2580,7 @@ window.ESSAYS = [
   function answerQuiz(answer) {if(!session||session.answered)return;const w=byId.get(session.queue[0].id);session.lastCorrect=session.type==='spelling'?answer.trim().toLowerCase().replace(/\s+/g,' ')===w.word.toLowerCase():answer===String(w.id);session.answered=true;if(session.lastCorrect)session.correct++;else{session.wrong.push(w.id);if(session.foundation){persist({...state,extraIds:state.extraIds.includes(w.id)?state.extraIds:[...state.extraIds,w.id],knownIds:state.knownIds.filter(id=>id!==w.id)});}if(state.records[w.id]?.learned){try{persist(E.grade(state,w.id,'again',today()));}catch(_){/* A completed daily review is not advanced by practice. */}}}renderStudy();}
   function nextQuestion(){if(!session)return;session.queue.shift();session.completed++;session.answered=false;session.options=null;renderStudy();}
   function renderFinish(){const isCards=session.type==='cards',s=stats();$('#study-content').innerHTML=`<div class="study-top"><span>一次小小的进步</span><button class="close-button" data-action="close-study" aria-label="关闭结果">✕</button></div><div class="flashcard finish"><div class="finish-icon">✳</div><h2>${isCards?'这一组，完成了。':'回忆越主动，记忆越扎实。'}</h2><p>${isCards?`你认真完成了 ${session.completed} 个词的回忆。<br>下一次重逢，已经安排好了。`:`本次答对 ${session.correct} / ${session.total} 题。<br>${session.wrong.length?(session.foundation?'不会的基础词已加入学习计划。':'错词已列在下方，建议隔一会儿再次检索。'):'做得好，明天再检验一次记忆。'}`}</p>${!isCards&&session.wrong.length?`<p>${session.wrong.map(id=>esc(byId.get(String(id))?.word||id)).join(' · ')}</p>`:''}</div><div class="study-bottom"><button class="btn btn-primary wide" data-action="finish-study">${E.canCheckIn(state,words,today())&&!s.checkedIn?'完成今日任务并打卡':'返回学习空间'}</button><p class="study-caption">${s.newRemaining||s.dueRemaining?`今日新词还差 ${s.newRemaining} 个；待复习/重试 ${s.dueRemaining} 个（可能包含未完成的新词）。`:'今天的词汇任务已经完成。记得给自己一点肯定。'}</p></div>`;render();}
-  function closeStudy(){ $('#study-dialog').close();session=null;if('speechSynthesis'in window)speechSynthesis.cancel();render();}
+  function closeStudy(){stopSpeech();$('#study-dialog').close();session=null;render();}
   function checkIn(){try{if(!E.canCheckIn(state,words,today())){const s=stats();toast(`还需完成 ${s.newRemaining} 个新词和 ${s.dueRemaining} 个待复习词。`);return;}persist(E.checkIn(state,words,today()));toast('今日打卡完成。每一天都算数。');render();}catch(err){toast(err.message);}}
   function backup(){return JSON.stringify({app:'word42',version:1,exportedAt:new Date().toISOString(),state,preferences:prefs},null,2);}
   function restore(raw) {
@@ -2417,7 +2600,7 @@ window.ESSAYS = [
         }
       }
       if(!confirm('已通过格式校验。恢复备份会覆盖当前设备的学习记录，是否继续？'))return;
-      persist(next);prefs=nextPrefs;savePrefs();toast('备份已恢复。');render();
+      discardEssayDrafts();persist(next);prefs=nextPrefs;savePrefs();toast('备份已恢复。');render();
     } catch(error) {toast('恢复失败：'+error.message);}
   }
   async function install(){if(installPrompt){await installPrompt.prompt();installPrompt=null;return;}openDetail('<span class="eyebrow">TAKE YOUR WORDS WITH YOU</span><h1>在手机上使用词序42</h1><p>在 Mate 80 的浏览器中打开应用网址，然后查看浏览器菜单是否提供“添加到桌面”或“安装”。没有该选项时可以收藏网址。</p><p>第一次在线打开后，应用会尝试缓存词库与页面。离线可用性由浏览器支持和缓存是否保留决定。</p><p>原生鸿蒙安装需要配套工程经 DevEco Studio 编译和设备签名。网页入口与原生 HAP 是两种交付方式。</p><p>更换浏览器或设备前，请在“计划与设置”导出进度。</p>');}
@@ -2425,9 +2608,10 @@ window.ESSAYS = [
     if(b.dataset.nav){go(b.dataset.nav);return;}
     if(b.dataset.start){openStudy(b.dataset.start);return;}
     if(b.dataset.quiz){startQuiz(b.dataset.quiz);return;}
-    if(b.dataset.filter){libraryTab=b.dataset.filter;page=1;render();return;}
-    if(b.dataset.page){page=Number(b.dataset.page);render();window.scrollTo({top:0,behavior:'instant'});return;}
+    if(b.dataset.filter){stopSpeech();libraryTab=b.dataset.filter;page=1;render();return;}
+    if(b.dataset.page){stopSpeech();page=Number(b.dataset.page);render();window.scrollTo({top:0,behavior:'instant'});return;}
     if(b.dataset.speak){speak(b.dataset.speak);return;}
+    if(b.hasAttribute('data-sentence')){playEssay(Number(b.dataset.sentence));return;}
     if(b.dataset.favorite){const id=byId.get(b.dataset.favorite)?.id;if(id===undefined)return;const ids=state.favoriteIds.includes(id)?state.favoriteIds.filter(x=>x!==id):[...state.favoriteIds,id];persist({...state,favoriteIds:ids});if($('#detail-dialog').open&&view==='library')showWord(String(id));if(session&&session.type==='cards')renderStudy();render();return;}
     if(b.dataset.known){const id=byId.get(b.dataset.known)?.id;if(id===undefined)return;persist({...state,knownIds:state.knownIds.includes(id)?state.knownIds.filter(x=>x!==id):[...state.knownIds,id]});toast(state.knownIds.includes(id)?'已标记熟悉，将跳过学习；再次点击可恢复。':'已重新加入学习。');render();return;}
     if(b.dataset.extra){const id=byId.get(b.dataset.extra)?.id;if(id!==undefined){persist({...state,extraIds:state.extraIds.includes(id)?state.extraIds:[...state.extraIds,id],knownIds:state.knownIds.filter(x=>x!==id)});toast(byId.get(String(id)).base?'已恢复基础补漏，将优先安排。':'已加入扩展计划；会排在未学冲刺词之后。');showWord(String(id));}return;}
@@ -2438,6 +2622,8 @@ window.ESSAYS = [
     if(b.dataset.answer){answerQuiz(b.dataset.answer);return;}
     if(b.dataset.read){const day=Number(b.dataset.read);const note=$('#essay-notes')?.value||'';if(note.length>20000){toast('单篇笔记最多20000字符，请缩短后保存。');return;}prefs.readingNotes[day]=note;if(!prefs.readDays.includes(day))prefs.readDays.push(day);savePrefs();toast('练习笔记已保存。');render();return;}
     const a=b.dataset.action;
+    if(a==='essay-play'){playEssay(0,true);return;}
+    if(a==='essay-stop'){stopSpeech();return;}
     if(a==='foundation-check')startFoundationCheck();
     if(a==='reveal'){session.revealed=true;renderStudy();}
     if(a==='close-study')closeStudy();
@@ -2450,14 +2636,17 @@ window.ESSAYS = [
     if(a==='export'){if(window.WORD42_NATIVE){$('#backup-text').value=backup();$('#backup-text').focus();$('#backup-text').select();toast('鸿蒙本地版请复制备份文本保存。');return;}const blob=new Blob([backup()],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`词序42-进度-${today()}.json`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('备份文件已生成。');}
     if(a==='import-text')restore($('#backup-text').value);
     if(a==='install')install();
-    if(a==='reset'&&confirm('这会清空当前设备全部单词进度和写作笔记。建议先备份。确定重新开始？')){persist(E.createState(today()));prefs={readDays:[],readingNotes:{},showTranslation:true};savePrefs();render();toast('已开始新的42天计划。');}
+    if(a==='reset'&&confirm('这会清空当前设备全部单词进度和写作笔记。建议先备份。确定重新开始？')){discardEssayDrafts();persist(E.createState(today()));prefs={readDays:[],readingNotes:{},showTranslation:true};savePrefs();render();toast('已开始新的42天计划。');}
   });
   document.addEventListener('input',event=>{if(event.target.id==='word-search'){search=event.target.value;page=1;const pos=event.target.selectionStart;render();const input=$('#word-search');input.focus();try{input.setSelectionRange(pos,pos);}catch(_){}}});
-  document.addEventListener('change',event=>{if(event.target.id==='show-basic'){showBasic=event.target.checked;page=1;render();}if(event.target.id==='translation-toggle'){prefs.showTranslation=event.target.checked;savePrefs();document.querySelectorAll('.chinese').forEach(p=>p.hidden=!prefs.showTranslation);}if(event.target.id==='import-file'){const file=event.target.files[0];if(!file)return;if(file.size>5*1024*1024){toast('备份文件过大，请选择5MB以内的JSON文件。');return;}file.text().then(restore).catch(()=>toast('无法读取这个文件。'));}});
+  document.addEventListener('change',event=>{if(event.target.id==='essay-rate'){audioRate=Number(event.target.value)===0.75?0.75:1;stopSpeech();updateEssayAudio('语速已切换。点句子或整篇开始朗读。');}if(event.target.id==='show-basic'){showBasic=event.target.checked;page=1;render();}if(event.target.id==='translation-toggle'){prefs.showTranslation=event.target.checked;savePrefs();document.querySelectorAll('.chinese').forEach(p=>p.hidden=!prefs.showTranslation);}if(event.target.id==='import-file'){const file=event.target.files[0];if(!file)return;if(file.size>5*1024*1024){toast('备份文件过大，请选择5MB以内的JSON文件。');return;}file.text().then(restore).catch(()=>toast('无法读取这个文件。'));}});
   document.addEventListener('submit',event=>{if(event.target.id==='spelling-form'){event.preventDefault();answerQuiz($('#spelling-answer').value);}});
-  $('#detail-close').addEventListener('click',()=>$('#detail-dialog').close());
-  $('#study-dialog').addEventListener('cancel',()=>{session=null;render();});
-  window.addEventListener('hashchange',()=>{const next=location.hash.slice(1);if(next!==view){view=navs.some(n=>n[0]===next)||next==='settings'?next:'home';render();}});
+  $('#detail-close').addEventListener('click',()=>{rememberEssayNote();stopSpeech();$('#detail-dialog').close();});
+  $('#detail-dialog').addEventListener('cancel',()=>{rememberEssayNote();stopSpeech();});
+  $('#detail-dialog').addEventListener('close',()=>{rememberEssayNote();stopSpeech();});
+  $('#study-dialog').addEventListener('close',stopSpeech);
+  $('#study-dialog').addEventListener('cancel',()=>{stopSpeech();session=null;render();});
+  window.addEventListener('hashchange',()=>{const next=location.hash.slice(1);if(next!==view){stopSpeech();rememberEssayNote();if($('#detail-dialog').open)$('#detail-dialog').close();view=navs.some(n=>n[0]===next)||next==='settings'?next:'home';render();}});
   window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;});
   window.addEventListener('storage',event=>{if(event.key===KEY&&event.newValue){try{state=E.validateImport(JSON.parse(event.newValue),words);if(session){closeStudy();toast('另一页面已更新进度，请重新开始当前学习组。');}render();}catch(_){toast('另一页面的进度无法读取，请导出当前备份。');}}});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(session&&session.date!==today()){closeStudy();toast('新的一天开始了，学习任务已更新。');}else if(!session)render();}});
