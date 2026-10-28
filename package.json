@@ -5,7 +5,7 @@
   "description": "42-day vocabulary and writing practice for CET-4",
   "scripts": {
     "start": "node scripts/serve.cjs",
-    "test": "node --test tests",
+    "test": "node --test tests/content.test.cjs tests/engine.test.cjs tests/foundation.test.cjs tests/speech.test.cjs",
     "package:harmony": "node harmonyos/scripts/package-web.mjs"
   },
   "license": "MIT"
