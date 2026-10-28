@@ -1,6 +1,12 @@
 # 词序42 · 四级基础强化
 
+[![Pages](https://img.shields.io/github/deployments/zcr16/word42-cet4/github-pages?label=pages)](https://zcr16.github.io/word42-cet4/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![tests](https://img.shields.io/badge/tests-37%20passing-green)](tests)
+
 一个不需要账号的手机优先背词应用：间隔复习、主动回忆、拼写自测、基础补漏、42天写作。学习进度只保存在使用它的浏览器或原生应用本机存储中。
+
+**在线试用（网页版，无需账号）**：<https://zcr16.github.io/word42-cet4/> —— 手机浏览器打开后可在菜单里“添加到主屏幕”；鸿蒙原生工程见 [`harmonyos/`](harmonyos/)。
 
 ## v1.1.2 · 写作点读与英语资源准备修复（2026-10-26）
 
